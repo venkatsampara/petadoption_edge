@@ -28,10 +28,14 @@ for (const configured of configuredOrigins) {
     throw new Error(`Invalid CORS origin URL: ${configured}`);
   }
 }
+console.info(`CORS allowed origins: ${[...allowedOrigins].join(", ")}`);
 
 app.set("trust proxy", 1);
 app.use((request, response, next) => {
   const origin = request.get("origin");
+  if (origin && !allowedOrigins.has(origin)) {
+    console.warn(`CORS denied origin: ${origin}`);
+  }
   if (origin && allowedOrigins.has(origin)) {
     response.setHeader("Access-Control-Allow-Origin", origin);
     response.setHeader("Vary", "Origin");
