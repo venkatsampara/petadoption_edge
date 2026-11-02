@@ -1,5 +1,8 @@
 import type { MetadataRoute } from "next";
-import { getPets } from "@/lib/api";
+import { ApiRequestError, getPets } from "@/lib/api";
+import type { Pet } from "@/lib/types";
+
+export const revalidate = 300;
 
 const staticRoutes = [
   "",
@@ -16,19 +19,24 @@ const staticRoutes = [
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-  const pets = [];
-  let page = 1;
-  let totalPages = 1;
-  do {
-    const listing = await getPets(new URLSearchParams({
-      status: "available",
-      page: String(page),
-      limit: "50",
-    }));
-    pets.push(...listing.items);
-    totalPages = listing.pagination.totalPages;
-    page += 1;
-  } while (page <= totalPages);
+  const pets: Pet[] = [];
+  try {
+    let page = 1;
+    let totalPages = 1;
+    do {
+      const listing = await getPets(new URLSearchParams({
+        status: "available",
+        page: String(page),
+        limit: "50",
+      }));
+      pets.push(...listing.items);
+      totalPages = listing.pagination.totalPages;
+      page += 1;
+    } while (page <= totalPages);
+  } catch (error) {
+    // Fall back to static routes if the API is unreachable.
+    if (!(error instanceof ApiRequestError)) throw error;
+  }
 
   const staticEntries: MetadataRoute.Sitemap = staticRoutes.map((route) => ({
     url: new URL(route || "/", siteUrl).toString(),

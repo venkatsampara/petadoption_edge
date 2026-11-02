@@ -5,7 +5,10 @@ import { ArrowRight, HeartHandshake, Home, MapPin, ShieldCheck, Sparkles } from 
 import { PetCard } from "@/components/pet-card";
 import { Reveal } from "@/components/reveal";
 import { JsonLd } from "@/components/json-ld";
-import { getFeaturedPets } from "@/lib/api";
+import { ApiRequestError, getFeaturedPets } from "@/lib/api";
+import type { Pet } from "@/lib/types";
+
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Pet Adoption in Hyderabad — Find Your New Best Friend",
@@ -38,7 +41,13 @@ const steps = [
 ];
 
 export default async function HomePage() {
-  const pets = await getFeaturedPets();
+  let pets: Pet[] = [];
+  try {
+    pets = await getFeaturedPets();
+  } catch (error) {
+    // Keep the build/render alive if the API is asleep; ISR refreshes this page.
+    if (!(error instanceof ApiRequestError)) throw error;
+  }
 
   return (
     <>

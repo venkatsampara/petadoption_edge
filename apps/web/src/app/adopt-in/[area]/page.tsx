@@ -5,6 +5,8 @@ import { PetGrid } from "@/components/pet-grid";
 import { BreadcrumbJsonLd, JsonLd } from "@/components/json-ld";
 import { localities, getLocality } from "@/lib/localities";
 
+export const revalidate = 300;
+
 export function generateStaticParams() {
   return localities.map(({ slug }) => ({ area: slug }));
 }

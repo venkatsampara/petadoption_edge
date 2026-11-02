@@ -74,9 +74,9 @@ Never put `DATABASE_URL`, `JWT_SECRET`, or the admin password in frontend enviro
 
 Create a **Web Service** from this repository:
 
-- Root directory: `apps/api`
-- Build command: `pnpm --filter @hyderabad-paws/shared build && pnpm --filter api build && pnpm --filter api db:push`
-- Start command: `node dist/index.js`
+- Root directory: leave **empty** (repository root), so the whole pnpm workspace is installed
+- Build command: `pnpm install --frozen-lockfile --prod=false && pnpm --filter api build && pnpm --filter api db:push`
+- Start command: `node apps/api/dist/index.js`
 - Health check path: `/api/v1/health`
 
 Set these Render environment variables:
@@ -89,11 +89,11 @@ Set these Render environment variables:
 - `CORS_ORIGIN` — same deployed Vercel site origin
 - `NODE_ENV=production`
 
-The API listens on Render’s `PORT` environment variable. The workspace lockfile remains at the repository root; configure Render’s install command to run `pnpm install --frozen-lockfile` from the repository root if automatic dependency installation does not find the workspace.
+The API listens on Render’s `PORT` environment variable. The build must run from the repository root: `@hyderabad-paws/shared` (which needs `zod`) is a workspace package, and `--prod=false` keeps TypeScript and `drizzle-kit` installed even though `NODE_ENV=production`. `pnpm --filter api build` already builds the shared package first.
 
 ## Deploy web to Vercel
 
-Import the repository into Vercel and set **Root Directory** to `apps/web`.
+Import the repository into Vercel and set **Root Directory** to `apps/web`. Leave "Include source files outside of the Root Directory" enabled (default). The web app compiles `packages/shared` directly from source (see `next.config.mjs`), so no separate shared build step is needed.
 
 Set these Vercel environment variables:
 

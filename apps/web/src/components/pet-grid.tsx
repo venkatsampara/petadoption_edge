@@ -1,4 +1,4 @@
-import { getPets } from "@/lib/api";
+import { ApiRequestError, getPets } from "@/lib/api";
 import { PetCard } from "@/components/pet-card";
 
 export async function PetGrid({
@@ -12,7 +12,22 @@ export async function PetGrid({
   emptyTitle?: string;
   emptyBody?: string;
 }) {
-  const result = await getPets(filters);
+  let result;
+  try {
+    result = await getPets(filters);
+  } catch (error) {
+    if (!(error instanceof ApiRequestError)) throw error;
+    // The API may be cold-starting; show a friendly state instead of failing the page.
+    return (
+      <div className="rounded-3xl border border-dashed border-forest/25 bg-white/70 px-6 py-14 text-center">
+        <span className="text-4xl" aria-hidden="true">🐾</span>
+        <h2 className="mt-4 font-serif text-2xl text-forest">Our pets are waking up</h2>
+        <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-muted">
+          We couldn’t load the listings just now. Please refresh in a moment.
+        </p>
+      </div>
+    );
+  }
   if (result.items.length === 0) {
     return (
       <div className="rounded-3xl border border-dashed border-forest/25 bg-white/70 px-6 py-14 text-center">
