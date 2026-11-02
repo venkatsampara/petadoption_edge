@@ -183,17 +183,17 @@ authRouter.post(
       return;
     }
 
-    const email = parsed.data.email.toLowerCase();
+    const username = parsed.data.username.toLowerCase();
     const [admin] = await db
       .select()
       .from(adminUsers)
-      .where(eq(adminUsers.email, email))
+      .where(eq(adminUsers.email, username))
       .limit(1);
     const passwordMatches = admin
       ? await bcrypt.compare(parsed.data.password, admin.passwordHash)
       : false;
     if (!admin || !passwordMatches) {
-      sendError(response, 401, "INVALID_CREDENTIALS", "Email or password is incorrect");
+      sendError(response, 401, "INVALID_CREDENTIALS", "Username or password is incorrect");
       return;
     }
 

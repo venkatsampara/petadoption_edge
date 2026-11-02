@@ -189,7 +189,7 @@ const seedPets: PetSeed[] = [
 
 async function seed(): Promise<void> {
   const databaseUrl = process.env.DATABASE_URL;
-  const adminEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase();
+  const adminEmail = (process.env.ADMIN_USERNAME ?? process.env.ADMIN_EMAIL)?.trim().toLowerCase();
   const adminPassword = process.env.ADMIN_PASSWORD;
 
   if (!databaseUrl) throw new Error("DATABASE_URL is required to seed the database");
@@ -199,7 +199,7 @@ async function seed(): Promise<void> {
   if (!databaseUrl.includes("sslmode=require")) {
     throw new Error("DATABASE_URL must include sslmode=require");
   }
-  if (!adminEmail) throw new Error("ADMIN_EMAIL is required to seed the admin user");
+  if (!adminEmail) throw new Error("ADMIN_USERNAME is required to seed the admin user");
   if (!adminPassword || adminPassword.length < 12) {
     throw new Error("ADMIN_PASSWORD must be at least 12 characters");
   }

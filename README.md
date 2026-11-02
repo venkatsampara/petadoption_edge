@@ -31,7 +31,7 @@ packages/
 
    - `DATABASE_URL`: Neon pooled connection string (`-pooler` in the hostname) with `sslmode=require`
    - `JWT_SECRET`: at least 32 random characters
-   - `ADMIN_EMAIL` and `ADMIN_PASSWORD`: initial admin login
+   - `ADMIN_USERNAME` and `ADMIN_PASSWORD`: initial admin login (password at least 12 characters; `ADMIN_EMAIL` is still accepted as a fallback)
    - `NEXT_PUBLIC_SITE_URL` and `CORS_ORIGIN`: local web origin, normally `http://localhost:3000`
 
 3. Copy `apps/web/.env.example` to `apps/web/.env.local`. Set:
@@ -83,7 +83,7 @@ Set these Render environment variables:
 
 - `DATABASE_URL` — Neon pooled URL, including `sslmode=require`
 - `JWT_SECRET` — strong random secret, 32+ characters
-- `ADMIN_EMAIL`
+- `ADMIN_USERNAME`
 - `ADMIN_PASSWORD`
 - `NEXT_PUBLIC_SITE_URL` — the deployed Vercel site origin
 - `CORS_ORIGIN` — same deployed Vercel site origin
@@ -110,7 +110,7 @@ Set the same Cloudinary cloud name and upload preset in the API environment if y
 |---|---:|---:|---|
 | `DATABASE_URL` | Required | Never | Neon pooled PostgreSQL connection |
 | `JWT_SECRET` | Required | Never | Signs admin session tokens |
-| `ADMIN_EMAIL` | Required for seed | Never | Initial admin login |
+| `ADMIN_USERNAME` | Required for seed | Never | Initial admin login username |
 | `ADMIN_PASSWORD` | Required for seed | Never | Initial admin password |
 | `NEXT_PUBLIC_API_URL` | No | Required | Browser/server REST API base URL |
 | `NEXT_PUBLIC_SITE_URL` | Required | Required | Canonical URL, metadata, and CORS allowlist |

@@ -16,11 +16,11 @@ export function AdminLoginForm() {
     setError("");
     const formData = new FormData(event.currentTarget);
     const parsed = loginInputSchema.safeParse({
-      email: formData.get("email"),
+      username: formData.get("username"),
       password: formData.get("password"),
     });
     if (!parsed.success) {
-      setError(parsed.error.issues[0]?.message ?? "Enter a valid email and password.");
+      setError(parsed.error.issues[0]?.message ?? "Enter your username and password.");
       return;
     }
 
@@ -44,7 +44,7 @@ export function AdminLoginForm() {
         <h1 className="mt-3 font-serif text-4xl text-forest">Welcome back</h1>
         <p className="mt-3 text-sm leading-6 text-muted">Sign in to manage pet profiles and adoption applications.</p>
         <form onSubmit={submit} className="mt-7 grid gap-5" noValidate>
-          <label className="field-label"><span>Email</span><input className="field-control" name="email" type="email" autoComplete="username" required /></label>
+          <label className="field-label"><span>Username</span><input className="field-control" name="username" type="text" autoComplete="username" autoCapitalize="none" spellCheck={false} required /></label>
           <label className="field-label"><span>Password</span><input className="field-control" name="password" type="password" autoComplete="current-password" required /></label>
           {error && <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800">{error}</p>}
           <button type="submit" className="button w-full" disabled={busy}>{busy ? "Signing in…" : "Sign in"}</button>
