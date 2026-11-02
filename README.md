@@ -86,7 +86,7 @@ Set these Render environment variables:
 - `ADMIN_USERNAME`
 - `ADMIN_PASSWORD`
 - `NEXT_PUBLIC_SITE_URL` — the deployed Vercel site origin
-- `CORS_ORIGIN` — same deployed Vercel site origin
+- `CORS_ORIGIN` — same deployed Vercel site origin (e.g. `https://petadoption-edge-zeta.vercel.app`, no path). Multiple origins can be comma-separated. The API allows `CORS_ORIGIN`, `NEXT_PUBLIC_SITE_URL` and `http://localhost:3000`; any other origin gets a 403.
 - `NODE_ENV=production`
 
 The API listens on Render’s `PORT` environment variable. The build must run from the repository root: `@hyderabad-paws/shared` (which needs `zod`) is a workspace package, and `--prod=false` keeps TypeScript and `drizzle-kit` installed even though `NODE_ENV=production`. `pnpm --filter api build` already builds the shared package first.

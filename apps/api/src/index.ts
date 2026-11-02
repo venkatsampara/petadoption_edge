@@ -16,13 +16,16 @@ if (!Number.isInteger(port) || port < 1 || port > 65535) {
   throw new Error("PORT must be a valid TCP port");
 }
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
 const allowedOrigins = new Set(["http://localhost:3000"]);
-if (siteUrl) {
+// Accept both variables; CORS_ORIGIN may hold several comma-separated origins.
+const configuredOrigins = [process.env.NEXT_PUBLIC_SITE_URL, ...(process.env.CORS_ORIGIN ?? "").split(",")]
+  .map((value) => value?.trim())
+  .filter((value): value is string => Boolean(value));
+for (const configured of configuredOrigins) {
   try {
-    allowedOrigins.add(new URL(siteUrl).origin);
+    allowedOrigins.add(new URL(configured).origin);
   } catch {
-    throw new Error("NEXT_PUBLIC_SITE_URL must be a valid URL");
+    throw new Error(`Invalid CORS origin URL: ${configured}`);
   }
 }
 
