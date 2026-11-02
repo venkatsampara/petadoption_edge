@@ -1,0 +1,1 @@
+ALTER TABLE "applications" ALTER COLUMN "pet_id" DROP NOT NULL;

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title description">
+  <title id="title">A happy pet waiting for a home</title>
+  <desc id="description">Warm illustration of a friendly dog with plants and a sunny background.</desc>
+  <rect width="1200" height="900" fill="#efe9dc"/>
+  <circle cx="900" cy="170" r="95" fill="#e8a33d" opacity=".8"/>
+  <path d="M0 690c190-90 335-10 490-44s350-130 710-3v257H0z" fill="#d5dfcf"/>
+  <path d="M140 725c22-110 32-220 9-315 72 44 108 139 87 256m-18-160c53-29 86-75 100-137 32 63 17 130-63 188" fill="none" stroke="#719176" stroke-linecap="round" stroke-width="24"/>
+  <path d="M1010 760c-20-105-18-198 17-286-74 36-119 123-108 232m20-146c-50-35-78-84-83-146-38 59-30 128 44 195" fill="none" stroke="#719176" stroke-linecap="round" stroke-width="24"/>
+  <ellipse cx="604" cy="675" rx="270" ry="176" fill="#c7834d"/>
+  <path d="M425 530c-115-150-85-270-13-288 90-20 142 122 149 206m200 80c94-173 211-190 253-136 46 61-28 176-138 240" fill="#a8663d"/>
+  <ellipse cx="620" cy="445" rx="205" ry="192" fill="#d9955d"/>
+  <ellipse cx="620" cy="509" rx="117" ry="82" fill="#f3dec2"/>
+  <circle cx="550" cy="423" r="16" fill="#342920"/>
+  <circle cx="693" cy="423" r="16" fill="#342920"/>
+  <ellipse cx="621" cy="487" rx="24" ry="17" fill="#342920"/>
+  <path d="M597 524c16 20 34 20 49 0" fill="none" stroke="#75472f" stroke-linecap="round" stroke-width="9"/>
+  <path d="M484 335c48-35 91-50 133-55m31 1c49 4 95 20 133 50" fill="none" stroke="#f1bb81" stroke-linecap="round" stroke-width="18"/>
+  <path d="M498 791v54m216-54v54" stroke="#9c5e3b" stroke-linecap="round" stroke-width="30"/>
+  <path d="M520 591c50 29 153 38 204 0" fill="none" stroke="#f1c47c" stroke-linecap="round" stroke-width="16"/>
+</svg>
