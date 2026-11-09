@@ -65,5 +65,5 @@ export function getFeaturedPets(): Promise<Pet[]> {
 }
 
 export function getPet(slug: string): Promise<Pet> {
-  return apiGet<Pet>(`/pets/${encodeURIComponent(slug)}`);
+  return apiGet<Pet>(`/pets/${encodeURIComponent(slug)}`, 0);
 }

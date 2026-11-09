@@ -13,6 +13,7 @@ export type Pet = {
   sterilized: boolean;
   status: "available" | "pending" | "adopted";
   images: string[];
+  whatsappNumber: string | null;
   createdAt: string;
   updatedAt: string;
 };

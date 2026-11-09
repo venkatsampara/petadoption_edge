@@ -23,6 +23,7 @@ export const pets = pgTable("pets", {
   sterilized: boolean("sterilized").default(false).notNull(),
   status: text("status").default("available").notNull(),
   images: jsonb("images").$type<string[]>().default([]).notNull(),
+  whatsappNumber: text("whatsapp_number"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),

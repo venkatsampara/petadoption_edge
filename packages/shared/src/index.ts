@@ -11,6 +11,21 @@ export const applicationStatusSchema = z.enum([
   "rejected",
 ]);
 
+// Store Indian mobile numbers in the digit-only international format used by wa.me.
+export function normalizeWhatsAppNumber(value: string): string | null {
+  if (!/^[\d\s()+-]+$/.test(value)) return null;
+  const digits = value.replace(/\D/g, "");
+  const match = /^(?:91|0)?([6-9]\d{9})$/.exec(digits);
+  return match ? `91${match[1]}` : null;
+}
+
+export function getWhatsAppLink(phone: string | null | undefined, petName: string): string | null {
+  const number = phone ? normalizeWhatsAppNumber(phone) : null;
+  if (!number) return null;
+  const message = `Hello! I am interested in adopting ${petName}. Could you please share more details?`;
+  return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+}
+
 export const petInputSchema = z.object({
   slug: z
     .string()
@@ -29,6 +44,10 @@ export const petInputSchema = z.object({
   sterilized: z.boolean().default(false),
   status: petStatusSchema.default("available"),
   images: z.array(z.string().url()).default([]),
+  whatsappNumber: z.string().trim().max(30)
+    .refine((value) => normalizeWhatsAppNumber(value) !== null, "Enter a valid Indian mobile number, for example +91 98765 43210.")
+    .transform((value) => normalizeWhatsAppNumber(value)!)
+    .nullable().optional(),
 });
 
 export const petUpdateSchema = petInputSchema.partial().refine(

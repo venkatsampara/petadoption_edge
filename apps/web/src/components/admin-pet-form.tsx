@@ -94,7 +94,12 @@ export function AdminPetForm({ petId }: Props) {
       sterilized: formData.get("sterilized") === "on",
       status: formData.get("status"),
       images: imageList,
+      whatsappNumber: formData.get("whatsappNumber")?.toString().trim() || null,
     };
+    if (data.whatsappNumber && formData.get("whatsappConsent") !== "on") {
+      setError("Confirm the owner or caretaker has agreed to share their WhatsApp number publicly.");
+      return;
+    }
     const parsed = petInputSchema.safeParse(data);
     if (!parsed.success) {
       setError(parsed.error.issues[0]?.message ?? "Please check the pet details.");
@@ -137,6 +142,8 @@ export function AdminPetForm({ petId }: Props) {
             <label className="field-label"><span>Status</span><select className="field-control" name="status" defaultValue={pet?.status ?? "available"}><option value="available">Available</option><option value="pending">Pending</option><option value="adopted">Adopted</option></select></label>
           </div>
           <label className="field-label"><span>Description</span><textarea className="field-control min-h-32 resize-y" name="description" required maxLength={10000} defaultValue={pet?.description ?? ""} /></label>
+          <label className="field-label"><span>Owner or caretaker WhatsApp number (optional)</span><input className="field-control" name="whatsappNumber" type="tel" autoComplete="tel" maxLength={30} placeholder="+91 98765 43210" defaultValue={pet?.whatsappNumber ?? ""} /><span className="text-xs font-normal text-muted">Indian mobile numbers only. This number will be public on the pet profile; leave blank to hide the WhatsApp button.</span></label>
+          <label className="inline-flex items-start gap-2 text-sm text-forest"><input className="mt-1" type="checkbox" name="whatsappConsent" /> <span>The owner or caretaker has agreed to receive adoption enquiries and share this number publicly.</span></label>
           <div className="flex flex-wrap gap-6">
             <label className="inline-flex items-center gap-2 text-sm font-semibold text-forest"><input type="checkbox" name="vaccinated" defaultChecked={pet?.vaccinated ?? false} /> Vaccinated</label>
             <label className="inline-flex items-center gap-2 text-sm font-semibold text-forest"><input type="checkbox" name="sterilized" defaultChecked={pet?.sterilized ?? false} /> Sterilized</label>

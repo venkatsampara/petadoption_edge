@@ -133,6 +133,8 @@ Set the same Cloudinary cloud name and upload preset in the API environment if y
 
 ## Scope notes
 
+- Admins can add an optional Indian WhatsApp mobile number to each pet profile after obtaining the owner or caretaker's permission. The number is public through the pet API and the chat link. Removing it hides the link; available pets with a valid number show a WhatsApp button with a suggested, unsent message. WhatsApp must be installed or available on the user's device.
+- After updating an existing installation, run `corepack pnpm db:push` before starting the updated API to add the nullable `whatsapp_number` column. Existing profiles have no number until an admin adds one.
 - Adoption and volunteer submissions are stored in the `applications` table. Volunteer rows have no pet reference and are kept separate from adoption applications in the admin inbox.
 - Pet profiles accept public image URLs. The admin also supports unsigned Cloudinary uploads when its web environment variables are configured.
 - TODO: Add Telugu localization after the MVP.
