@@ -3,14 +3,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PetGrid } from "@/components/pet-grid";
 import { BreadcrumbJsonLd, JsonLd } from "@/components/json-ld";
-import { localities, getLocality } from "@/lib/localities";
+import { getLocality } from "@/lib/localities";
 import { RecordPetSearch } from "@/components/record-pet-search";
 
 export const revalidate = 300;
-
-export function generateStaticParams() {
-  return localities.map(({ slug }) => ({ area: slug }));
-}
 
 export async function generateMetadata({
   params,

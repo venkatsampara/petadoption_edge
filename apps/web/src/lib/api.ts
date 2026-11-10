@@ -5,6 +5,8 @@ type ApiEnvelope<T> = {
   error: { code: string; message: string } | null;
 };
 
+const API_REQUEST_TIMEOUT_MS = 12_000;
+
 export class ApiRequestError extends Error {
   constructor(
     message: string,
@@ -29,6 +31,7 @@ async function apiGet<T>(path: string, revalidate = 300): Promise<T> {
     response = await fetch(`${getApiUrl()}${path}`, {
       next: { revalidate },
       headers: { Accept: "application/json" },
+      signal: AbortSignal.timeout(API_REQUEST_TIMEOUT_MS),
     });
   } catch (error) {
     throw new ApiRequestError(

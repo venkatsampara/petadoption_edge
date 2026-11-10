@@ -104,6 +104,8 @@ Set these Vercel environment variables:
 
 Set the same Cloudinary cloud name and upload preset in the API environment if you keep those optional documented keys there. The unsigned preset should allow only the image transformations and upload behavior required for pet profile photos.
 
+The Vercel build does not need the Render API to be awake: API-backed pages and the pet sitemap render on demand, while locality pages are generated on first request and revalidated. Server-side API requests time out after 12 seconds so a cold or unreachable API produces the page's retry/fallback state instead of stalling a build or request indefinitely.
+
 ## Environment checklist
 
 | Variable | API / Render | Web / Vercel | Purpose |

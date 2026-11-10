@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, HeartHandshake, Home, MapPin, ShieldCheck, Sparkles } from "lucide-react";
@@ -41,6 +42,7 @@ const steps = [
 ];
 
 export default async function HomePage() {
+  headers();
   let pets: Pet[] = [];
   let petsUnavailable = false;
   try {

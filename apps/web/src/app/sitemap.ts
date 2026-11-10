@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { headers } from "next/headers";
 import { ApiRequestError, getPets } from "@/lib/api";
 import type { Pet } from "@/lib/types";
 
@@ -18,6 +19,7 @@ const staticRoutes = [
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  headers();
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   const pets: Pet[] = [];
   try {
