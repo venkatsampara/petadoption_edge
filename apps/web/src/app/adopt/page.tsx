@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { PetGrid } from "@/components/pet-grid";
 import { PetGridSkeleton } from "@/components/pet-grid-skeleton";
 import { BreadcrumbJsonLd } from "@/components/json-ld";
+import { RecordPetSearch } from "@/components/record-pet-search";
 
 export const revalidate = 300;
 
@@ -44,7 +45,8 @@ export default async function AdoptPage({
   filters.set("limit", "12");
 
   return (
-    <div className="page-shell pb-16 pt-12 sm:pt-16">
+    <div className="public-theme page-shell pb-16 pt-12 sm:pt-16">
+      <RecordPetSearch species={readFilter(searchParams.species)} area={readFilter(searchParams.area)} size={readFilter(searchParams.size)} />
       <BreadcrumbJsonLd items={[{ name: "Home", path: "/" }, { name: "Adopt", path: "/adopt" }]} />
       <nav aria-label="Breadcrumb" className="text-sm text-muted">
         <ol className="flex items-center gap-2">
@@ -55,7 +57,7 @@ export default async function AdoptPage({
       </nav>
       <div className="mt-8 max-w-3xl">
         <p className="eyebrow">A friend is waiting</p>
-        <h1 className="mt-3 font-serif text-4xl font-semibold leading-tight text-forest sm:text-5xl">
+        <h1 className="fluid-title mt-3 font-serif font-semibold text-forest">
           Find your new best friend
         </h1>
         <p className="mt-4 max-w-2xl leading-7 text-muted">
@@ -63,7 +65,7 @@ export default async function AdoptPage({
         </p>
       </div>
 
-      <form action="/adopt" method="get" className="mt-9 rounded-3xl border border-forest/10 bg-white p-4 shadow-sm sm:p-5">
+      <form action="/adopt" method="get" className="mt-9 rounded-3xl border border-forest/10 bg-surface p-4 shadow-sm sm:p-5">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-[1fr_1.4fr_1fr_auto] lg:items-end">
           <label className="field-label">
             <span>Who are you hoping to meet?</span>
@@ -96,7 +98,7 @@ export default async function AdoptPage({
 
       <div className="mb-5 mt-10 flex items-center justify-between">
         <h2 className="font-serif text-2xl text-forest">Pets looking for a home</h2>
-        <Link href="/adopt" className="text-sm font-bold text-forest underline decoration-amber decoration-2 underline-offset-4">
+        <Link href="/adopt" className="inline-flex min-h-11 items-center text-sm font-bold text-forest underline decoration-amber decoration-2 underline-offset-4">
           Clear filters
         </Link>
       </div>

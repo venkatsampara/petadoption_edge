@@ -6,6 +6,10 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  images: {
+    formats: ["image/avif", "image/webp"],
+    remotePatterns: [{ protocol: "https", hostname: "res.cloudinary.com" }],
+  },
   // Compile the shared Zod schemas from source so the build never depends on
   // packages/shared/dist or on the workspace symlink being present.
   transpilePackages: ["@hyderabad-paws/shared"],

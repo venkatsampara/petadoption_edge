@@ -5,10 +5,11 @@ import {
   petInputSchema,
   petListQuerySchema,
   petUpdateSchema,
+  recommendationQuerySchema,
   volunteerInputSchema,
 } from "@hyderabad-paws/shared";
 import bcrypt from "bcryptjs";
-import { and, desc, eq, sql } from "drizzle-orm";
+import { and, desc, eq, inArray, ne, sql } from "drizzle-orm";
 import { Router } from "express";
 import { rateLimit } from "express-rate-limit";
 import { applications, adminUsers, pets } from "./db/schema";
@@ -93,6 +94,40 @@ apiRouter.get(
         totalPages: Math.ceil((count[0]?.count ?? 0) / limit),
       },
     });
+  }),
+);
+
+apiRouter.get(
+  "/pets/:slug/recommendations",
+  asyncHandler(async (request, response) => {
+    const parsed = recommendationQuerySchema.safeParse(request.query);
+    if (!parsed.success) {
+      sendError(response, 400, "VALIDATION_ERROR", "Invalid recommendation filters", parsed.error.flatten());
+      return;
+    }
+
+    const [currentPet] = await db.select({ id: pets.id, species: pets.species })
+      .from(pets).where(eq(pets.slug, request.params.slug)).limit(1);
+    if (!currentPet) {
+      sendError(response, 404, "NOT_FOUND", "Pet not found");
+      return;
+    }
+
+    const { species, sizes, area } = parsed.data;
+    const matchingSpecies = species.length ? species : [currentPet.species];
+    const popularity = sql<number>`(select count(*)::int from ${applications} where ${applications.petId} = ${pets.id})`;
+    const relevance = sql<number>`
+      (case when ${area ?? null}::text is not null and lower(${pets.area}) = lower(${area ?? null}::text) then 2 else 0 end)
+      + (case when ${sizes.length > 0 ? inArray(pets.size, sizes) : sql`false`} then 1 else 0 end)
+    `;
+    const matches = await db.select({ pet: pets, popularity })
+      .from(pets)
+      .where(and(eq(pets.status, "available"), ne(pets.id, currentPet.id), inArray(pets.species, matchingSpecies)))
+      .orderBy(desc(relevance), desc(popularity), desc(pets.createdAt), pets.id)
+      .limit(5);
+
+    matches.sort((a, b) => b.popularity - a.popularity);
+    sendData(response, matches.map(({ pet }) => pet));
   }),
 );
 

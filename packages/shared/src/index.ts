@@ -87,6 +87,50 @@ export const petListQuerySchema = z.object({
   limit: z.coerce.number().int().positive().max(50).default(12),
 });
 
+export const petSearchSchema = z.object({
+  species: petSpeciesSchema.optional(),
+  size: petSizeSchema.optional(),
+  area: z.string().trim().min(1).max(120).optional(),
+});
+
+export const petSearchHistorySchema = z.array(petSearchSchema).max(5);
+
+export const recommendationQuerySchema = z.object({
+  species: z.string().max(20).optional().transform((value, context) => {
+    const values = value ? value.split(",") : [];
+    if (values.some((item) => !petSpeciesSchema.safeParse(item).success)) {
+      context.addIssue({ code: z.ZodIssueCode.custom, message: "Invalid species" });
+      return z.NEVER;
+    }
+    return [...new Set(values)];
+  }),
+  sizes: z.string().max(30).optional().transform((value, context) => {
+    const values = value ? value.split(",") : [];
+    if (values.some((item) => !petSizeSchema.safeParse(item).success)) {
+      context.addIssue({ code: z.ZodIssueCode.custom, message: "Invalid size" });
+      return z.NEVER;
+    }
+    return [...new Set(values)];
+  }),
+  area: z.string().trim().min(1).max(120).optional(),
+});
+
+export type PetSearch = z.infer<typeof petSearchSchema>;
+
+export function addPetSearch(history: PetSearch[], search: PetSearch): PetSearch[] {
+  if (!search.species && !search.size && !search.area) return history;
+  const key = JSON.stringify(search);
+  return [search, ...history.filter((item) => JSON.stringify(item) !== key)].slice(0, 5);
+}
+
+export function recommendationPreferences(history: PetSearch[]) {
+  return {
+    species: [...new Set(history.flatMap((item) => item.species ? [item.species] : []))],
+    sizes: [...new Set(history.flatMap((item) => item.size ? [item.size] : []))],
+    area: history.find((item) => item.area)?.area,
+  };
+}
+
 export const loginInputSchema = z.object({
   // Stored in admin_users.email, which may hold either a username or an email.
   username: z.string().trim().min(3, "Enter your username.").max(254),

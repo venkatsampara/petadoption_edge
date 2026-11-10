@@ -112,14 +112,14 @@ export function AdminDashboard() {
           <button className="button button-outline" onClick={logout}>Sign out</button>
         </div>
       </header>
-      {error && <p role="alert" className="mt-6 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800">{error}</p>}
+      {error && <p role="alert" className="status-error mt-6 rounded-xl px-4 py-3 text-sm">{error}</p>}
 
       <section className="mt-10" aria-labelledby="admin-pets-heading">
         <div className="flex items-center justify-between gap-4">
           <h2 id="admin-pets-heading" className="font-serif text-3xl text-forest">Pet profiles <span className="text-lg text-muted">({pets.length})</span></h2>
           <Link className="font-bold text-forest underline decoration-amber underline-offset-4" href="/admin/pets/new">Add profile</Link>
         </div>
-        <div className="mt-5 overflow-x-auto rounded-2xl bg-white shadow-sm">
+        <div className="mt-5 overflow-x-auto rounded-2xl bg-surface shadow-sm">
           <table className="w-full min-w-[700px] text-left text-sm">
             <thead className="bg-[#E9F0EA] text-xs uppercase tracking-wide text-forest"><tr><th className="px-5 py-4">Pet</th><th className="px-5 py-4">Area</th><th className="px-5 py-4">Status</th><th className="px-5 py-4">Actions</th></tr></thead>
             <tbody className="divide-y divide-forest/10">
@@ -141,7 +141,7 @@ export function AdminDashboard() {
         <h2 id="applications-heading" className="font-serif text-3xl text-forest">Adoption applications <span className="text-lg text-muted">({applications.length})</span></h2>
         <div className="mt-5 grid gap-4 lg:grid-cols-2">
           {applications.map((application) => (
-            <article key={application.id} className="rounded-2xl bg-white p-5 shadow-sm">
+            <article key={application.id} className="rounded-2xl bg-surface p-5 shadow-sm">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <h3 className="font-serif text-xl text-forest">{application.applicantName}</h3>
@@ -161,7 +161,7 @@ export function AdminDashboard() {
               </div>
             </article>
           ))}
-          {applications.length === 0 && <p className="rounded-2xl bg-white px-5 py-8 text-center text-muted lg:col-span-2">No adoption applications received yet.</p>}
+          {applications.length === 0 && <p className="rounded-2xl bg-surface px-5 py-8 text-center text-muted lg:col-span-2">No adoption applications received yet.</p>}
         </div>
       </section>
     </div>

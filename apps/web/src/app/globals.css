@@ -4,6 +4,18 @@
 
 :root {
   color-scheme: light;
+  --color-canvas: #fdfbf7;
+  --color-surface: #ffffff;
+  --color-forest: #1f4e3d;
+  --color-forest-strong: #1f4e3d;
+  --color-amber: #e8a33d;
+  --color-ink: #1a1a1a;
+  --color-muted: #595f5c;
+  --color-eyebrow: #805111;
+  --color-soft: #e9f0ea;
+  --color-image-surface: #f0e9dd;
+  --color-border: rgb(31 78 61 / 14%);
+  --shadow-card: 0 10px 35px rgb(31 78 61 / 8%);
 }
 
 * {
@@ -12,12 +24,13 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
 }
 
 body {
   margin: 0;
-  background: #fdfbf7;
-  color: #1a1a1a;
+  background: var(--color-canvas);
+  color: var(--color-ink);
 }
 
 button,
@@ -28,8 +41,8 @@ textarea {
 }
 
 ::selection {
-  background: #e8a33d;
-  color: #1a1a1a;
+  background: var(--color-amber);
+  color: var(--color-ink);
 }
 
 .page-shell {
@@ -38,8 +51,11 @@ textarea {
 }
 
 .nav-link {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
   border-radius: 9999px;
-  color: #3b5146;
+  color: var(--color-forest);
   font-size: 0.9rem;
   font-weight: 650;
   text-decoration: none;
@@ -48,7 +64,11 @@ textarea {
 
 .nav-link:hover,
 .footer-link:hover {
-  color: #e8a33d;
+  color: var(--color-eyebrow);
+}
+
+.footer-link:hover {
+  color: #ffe0a6;
 }
 
 .nav-link:focus-visible,
@@ -57,15 +77,27 @@ textarea {
   outline-offset: 4px;
 }
 
+.footer-link {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+}
+
+.page-shell nav[aria-label="Breadcrumb"] a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+}
+
 .button {
   display: inline-flex;
-  min-height: 48px;
+  min-height: 44px;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  border: 1px solid #1f4e3d;
+  border: 1px solid var(--color-forest-strong);
   border-radius: 9999px;
-  background: #1f4e3d;
+  background: var(--color-forest-strong);
   padding: 0.75rem 1.4rem;
   color: #fff;
   font-size: 0.9rem;
@@ -87,45 +119,46 @@ textarea {
 }
 
 .button-small {
-  min-height: 42px;
+  min-height: 44px;
   padding-inline: 1.1rem;
   font-size: 0.82rem;
+  white-space: nowrap;
 }
 
 .button-outline {
-  border-color: rgb(31 78 61 / 25%);
+  border-color: var(--color-border);
   background: transparent;
-  color: #1f4e3d;
+  color: var(--color-forest);
 }
 
 .button-outline:hover {
-  background: #1f4e3d;
+  background: var(--color-forest-strong);
   color: white;
 }
 
 .field-label {
   display: grid;
   gap: 0.5rem;
-  color: #355342;
+  color: var(--color-forest);
   font-size: 0.82rem;
   font-weight: 700;
 }
 
 .field-control {
   width: 100%;
-  min-height: 48px;
-  border: 1px solid rgb(31 78 61 / 20%);
+  min-height: 44px;
+  border: 1px solid var(--color-border);
   border-radius: 0.9rem;
-  background: #fff;
+  background: var(--color-surface);
   padding: 0.7rem 0.9rem;
-  color: #1a1a1a;
+  color: var(--color-ink);
   font-size: 0.9rem;
   font-weight: 500;
 }
 
 .field-control:focus-visible {
-  border-color: #1f4e3d;
-  outline: 3px solid rgb(232 163 61 / 65%);
+  border-color: var(--color-forest);
+  outline: 3px solid color-mix(in srgb, var(--color-amber) 65%, transparent);
   outline-offset: 2px;
 }
 
@@ -135,7 +168,7 @@ textarea {
 }
 
 .eyebrow {
-  color: #8a5a18;
+  color: var(--color-eyebrow);
   font-size: 0.75rem;
   font-weight: 800;
   letter-spacing: 0.16em;
@@ -143,11 +176,21 @@ textarea {
 }
 
 .section-title {
-  color: #1f4e3d;
+  color: var(--color-forest);
   font-family: var(--font-fraunces), serif;
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(1.9rem, 5vw, 3rem);
   font-weight: 600;
   line-height: 1.15;
+}
+
+.fluid-title {
+  font-size: clamp(2.25rem, 7vw, 4.5rem);
+  line-height: 1.08;
+}
+
+.fluid-display {
+  font-size: clamp(2.5rem, 8vw, 3.75rem);
+  line-height: 1.08;
 }
 
 .pet-card {
@@ -165,13 +208,118 @@ textarea {
   left: 1rem;
   top: -5rem;
   border-radius: 9999px;
-  background: white;
+  background: var(--color-surface);
   padding: 0.8rem 1rem;
-  color: #1f4e3d;
+  color: var(--color-forest);
 }
 
 .skip-link:focus {
   top: 1rem;
+}
+
+.form-progress {
+  width: 100%;
+  height: 0.55rem;
+  overflow: hidden;
+  appearance: none;
+  border: 0;
+  border-radius: 9999px;
+  background: var(--color-soft);
+}
+
+.form-progress::-webkit-progress-bar {
+  border-radius: 9999px;
+  background: var(--color-soft);
+}
+
+.form-progress::-webkit-progress-value {
+  border-radius: 9999px;
+  background: var(--color-forest-strong);
+}
+
+.form-progress::-moz-progress-bar {
+  border-radius: 9999px;
+  background: var(--color-forest-strong);
+}
+
+.field-error {
+  color: #a32626;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.field-control[aria-invalid="true"] {
+  border-color: #a32626;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --color-canvas: #111915;
+  --color-surface: #1b2821;
+  --color-forest: #b7d7c3;
+  --color-forest-strong: #1f4e3d;
+  --color-amber: #f0bd6b;
+  --color-ink: #f2f4ef;
+  --color-muted: #bac3bd;
+  --color-eyebrow: #edc27a;
+  --color-soft: #25372d;
+  --color-image-surface: #303b33;
+  --color-border: rgb(183 215 195 / 24%);
+  --shadow-card: 0 10px 35px rgb(0 0 0 / 22%);
+}
+
+.theme-toggle {
+  display: inline-grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: 9999px;
+  background: var(--color-surface);
+  color: var(--color-forest);
+  cursor: pointer;
+  transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-1px);
+  border-color: var(--color-forest);
+  background: var(--color-soft);
+}
+
+.theme-toggle:focus-visible {
+  outline: 3px solid var(--color-amber);
+  outline-offset: 3px;
+}
+
+.field-error {
+  color: #a32626;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.field-control[aria-invalid="true"] {
+  border-color: #a32626;
+}
+
+.status-error {
+  border: 1px solid #e6b9b9;
+  background: #fff0f0;
+  color: #792323;
+}
+
+[data-theme="dark"] .field-error {
+  color: #ff9a9a;
+}
+
+[data-theme="dark"] .field-control[aria-invalid="true"] {
+  border-color: #ff9a9a;
+}
+
+[data-theme="dark"] .status-error {
+  border-color: #693d3d;
+  background: #392626;
+  color: #ffdada;
 }
 
 @media (min-width: 640px) {

@@ -42,11 +42,12 @@ const steps = [
 
 export default async function HomePage() {
   let pets: Pet[] = [];
+  let petsUnavailable = false;
   try {
     pets = await getFeaturedPets();
   } catch (error) {
-    // Keep the build/render alive if the API is asleep; ISR refreshes this page.
     if (!(error instanceof ApiRequestError)) throw error;
+    petsUnavailable = true;
   }
 
   return (
@@ -70,16 +71,16 @@ export default async function HomePage() {
           },
         ],
       }} />
-      <section className="relative isolate overflow-hidden bg-[#F3EEE3]">
+      <section className="public-theme relative isolate overflow-hidden bg-soft">
         <div className="page-shell grid min-h-[620px] items-center gap-10 py-14 md:grid-cols-[1.05fr_0.95fr] md:py-20">
           <div className="relative z-10">
             <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-forest/15 bg-canvas/80 px-4 py-2 text-sm font-bold text-forest">
               <MapPin size={15} aria-hidden="true" /> Hyderabad, meet your new best friend
             </p>
-            <h1 className="max-w-2xl font-serif text-5xl font-semibold leading-[1.06] tracking-tight text-forest sm:text-6xl lg:text-7xl">
-              A little more love starts <span className="text-[#B97519]">right here.</span>
+            <h1 className="fluid-title max-w-2xl font-serif font-semibold tracking-tight text-forest">
+              A little more love starts               <span className="text-eyebrow">right here.</span>
             </h1>
-            <p className="mt-6 max-w-xl text-lg leading-8 text-[#4F5B53]">
+            <p className="mt-6 max-w-xl text-lg leading-8 text-muted">
               Your next best friend is closer than you think. Meet kind, character-filled pets waiting for a home in Hyderabad.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
@@ -95,7 +96,7 @@ export default async function HomePage() {
           </div>
           <div className="relative mx-auto w-full max-w-[500px]">
             <div className="absolute -left-7 top-8 size-24 rounded-full bg-amber/35 blur-2xl" aria-hidden="true" />
-            <div className="relative aspect-[4/4.2] overflow-hidden rounded-[42%_42%_28px_28px] border-[10px] border-canvas shadow-[0_28px_70px_rgba(31,78,61,0.16)]">
+            <div className="relative aspect-[4/4.2] overflow-hidden rounded-[42%_42%_28px_28px] border-[10px] border-canvas shadow-card">
               <Image
                 src="/pet-placeholder.svg"
                 alt="Illustration of a happy rescued dog ready to meet its new family"
@@ -105,7 +106,7 @@ export default async function HomePage() {
                 className="object-cover"
               />
             </div>
-            <div className="absolute -bottom-5 -left-3 rounded-2xl bg-white px-5 py-4 shadow-card sm:-left-10">
+            <div className="absolute -bottom-5 -left-3 rounded-2xl bg-surface px-5 py-4 shadow-card sm:-left-10">
               <p className="font-serif text-xl text-forest">Every pet has a story.</p>
               <p className="mt-1 text-xs text-muted">Make yours the next chapter.</p>
             </div>
@@ -124,16 +125,21 @@ export default async function HomePage() {
               <h2 id="featured-heading" className="section-title mt-3">Meet a few lovely souls</h2>
               <p className="mt-3 max-w-xl text-muted">Each one is ready for a safe, caring home in our city.</p>
             </div>
-            <Link href="/adopt" className="inline-flex items-center gap-2 font-bold text-forest hover:text-[#B97519]">
+            <Link href="/adopt" className="inline-flex min-h-11 items-center gap-2 font-bold text-forest hover:text-eyebrow">
               See all pets <ArrowRight size={17} aria-hidden="true" />
             </Link>
           </div>
-          {pets.length ? (
+          {petsUnavailable ? (
+            <div role="alert" className="rounded-2xl bg-surface px-6 py-10 text-center">
+              <p className="text-muted">We couldn’t load the pet listings just now. Please try again in a moment.</p>
+              <a href="/" className="button button-outline mt-4">Try again</a>
+            </div>
+          ) : pets.length ? (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {pets.slice(0, 6).map((pet) => <PetCard key={pet.id} pet={pet} />)}
             </div>
           ) : (
-            <p className="rounded-2xl bg-white px-6 py-10 text-center text-muted">
+            <p className="rounded-2xl bg-surface px-6 py-10 text-center text-muted">
               No pets are listed just yet. Please check back soon.
             </p>
           )}
@@ -141,7 +147,7 @@ export default async function HomePage() {
       </Reveal>
 
       <Reveal>
-        <section className="bg-white py-20 sm:py-24" aria-labelledby="how-heading">
+        <section className="bg-surface py-20 sm:py-24" aria-labelledby="how-heading">
           <div className="page-shell">
             <div className="mx-auto max-w-2xl text-center">
               <p className="eyebrow">Simple, thoughtful, local</p>
@@ -153,7 +159,7 @@ export default async function HomePage() {
                 <article key={number} className="rounded-3xl border border-forest/10 bg-canvas p-7">
                   <div className="flex items-center justify-between">
                     <span className="font-serif text-4xl text-amber">{number}</span>
-                    <span className="grid size-12 place-items-center rounded-full bg-[#E9F0EA] text-forest">
+                    <span className="grid size-12 place-items-center rounded-full bg-soft text-forest">
                       <Icon size={22} aria-hidden="true" />
                     </span>
                   </div>
@@ -168,7 +174,7 @@ export default async function HomePage() {
 
       <Reveal>
         <section className="page-shell py-20 sm:py-24" aria-labelledby="areas-heading">
-          <div className="rounded-[32px] bg-[#E9F0EA] px-6 py-10 sm:px-12 sm:py-12">
+          <div className="rounded-[32px] bg-soft px-6 py-10 sm:px-12 sm:py-12">
             <div className="max-w-2xl">
               <p className="eyebrow">Close to home</p>
               <h2 id="areas-heading" className="section-title mt-3">Find a friend around your neighbourhood</h2>
@@ -179,7 +185,7 @@ export default async function HomePage() {
                 <Link
                   key={area}
                   href={`/adopt?area=${encodeURIComponent(area)}`}
-                  className="rounded-full border border-forest/20 bg-white px-5 py-2.5 text-sm font-bold text-forest transition hover:border-forest hover:bg-forest hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber"
+                  className="inline-flex min-h-11 items-center rounded-full border border-forest/20 bg-surface px-5 py-2.5 text-sm font-bold text-forest transition hover:border-forest hover:bg-forest-strong hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber"
                 >
                   {area}
                 </Link>
@@ -190,12 +196,12 @@ export default async function HomePage() {
       </Reveal>
 
       <section className="page-shell pb-20">
-        <div className="flex flex-col items-start justify-between gap-6 rounded-[32px] bg-forest px-7 py-9 text-white sm:flex-row sm:items-center sm:px-12 sm:py-12">
+        <div className="flex flex-col items-start justify-between gap-6 rounded-[32px] bg-forest-strong px-7 py-9 text-white sm:flex-row sm:items-center sm:px-12 sm:py-12">
           <div>
-            <p className="text-sm font-bold uppercase tracking-[0.16em] text-[#F2C478]">Your home could change everything</p>
+            <p className="text-sm font-bold uppercase tracking-[0.16em] text-amber">Your home could change everything</p>
             <h2 className="mt-3 max-w-xl font-serif text-3xl leading-tight sm:text-4xl">Make room for a little more joy.</h2>
           </div>
-          <Link href="/adopt" className="button border-white bg-white text-forest hover:bg-canvas">
+          <Link href="/adopt" className="button border-white bg-surface text-forest hover:bg-canvas">
             Meet the pets <ArrowRight size={17} aria-hidden="true" />
           </Link>
         </div>

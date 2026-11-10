@@ -126,7 +126,7 @@ export function AdminPetForm({ petId }: Props) {
   return (
     <div className="page-shell pb-16 pt-10">
       <Link href="/admin" className="font-bold text-forest underline">← Admin dashboard</Link>
-      <section className="mx-auto mt-6 max-w-3xl rounded-3xl bg-white p-6 shadow-card sm:p-9">
+      <section className="mx-auto mt-6 max-w-3xl rounded-3xl bg-surface p-6 shadow-card sm:p-9">
         <p className="eyebrow">Pet profile</p>
         <h1 className="mt-2 font-serif text-4xl text-forest">{petId ? `Edit ${pet?.name ?? "pet"}` : "Add a pet"}</h1>
         <form onSubmit={submit} className="mt-7 grid gap-5" noValidate>
@@ -150,7 +150,7 @@ export function AdminPetForm({ petId }: Props) {
           </div>
           <label className="field-label"><span>Pet photos</span><input className="field-control" type="file" accept="image/*" disabled={busy} onChange={(event) => { const file = event.target.files?.[0]; if (file) void uploadImage(file); }} /><span className="text-xs font-normal text-muted">Unsigned Cloudinary upload when configured, or use one public image URL per line below.</span></label>
           <label className="field-label"><span>Image URLs (one per line)</span><textarea className="field-control min-h-24 resize-y" name="images" value={imagesText} onChange={(event) => setImagesText(event.target.value)} /></label>
-          {error && <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800">{error}</p>}
+          {error && <p role="alert" className="status-error rounded-xl px-4 py-3 text-sm">{error}</p>}
           <button type="submit" className="button w-full sm:w-fit" disabled={busy}>{busy ? "Saving…" : petId ? "Save changes" : "Create pet profile"}</button>
         </form>
       </section>

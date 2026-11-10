@@ -133,6 +133,7 @@ Set the same Cloudinary cloud name and upload preset in the API environment if y
 
 ## Scope notes
 
+- Pet recommendations use up to five recent species, size, and neighbourhood searches saved in the visitor's browser. The most recently selected neighbourhood is used as the location; the app does not request device location. Visitors can clear saved searches from the recommendations box. Available pets matching the searched species are selected by neighbourhood and size relevance, then ordered by their number of adoption enquiries; without a species search, the current pet's species is used. Fewer than five may appear when matching pets are limited. The API receives the preference filters to find matches, but does not store the search history.
 - Admins can add an optional Indian WhatsApp mobile number to each pet profile after obtaining the owner or caretaker's permission. The number is public through the pet API and the chat link. Removing it hides the link; available pets with a valid number show a WhatsApp button with a suggested, unsent message. WhatsApp must be installed or available on the user's device.
 - After updating an existing installation, run `corepack pnpm db:push` before starting the updated API to add the nullable `whatsapp_number` column. Existing profiles have no number until an admin adds one.
 - Adoption and volunteer submissions are stored in the `applications` table. Volunteer rows have no pet reference and are kept separate from adoption applications in the admin inbox.

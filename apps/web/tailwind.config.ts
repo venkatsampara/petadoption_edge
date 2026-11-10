@@ -5,18 +5,24 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        canvas: "#FDFBF7",
-        forest: "#1F4E3D",
-        amber: "#E8A33D",
-        ink: "#1A1A1A",
-        muted: "#6B6B6B",
+        canvas: "var(--color-canvas)",
+        surface: "var(--color-surface)",
+        forest: "var(--color-forest)",
+        "forest-strong": "var(--color-forest-strong)",
+        amber: "var(--color-amber)",
+        ink: "var(--color-ink)",
+        muted: "var(--color-muted)",
+        eyebrow: "var(--color-eyebrow)",
+        soft: "var(--color-soft)",
+        "image-surface": "var(--color-image-surface)",
+        "token-border": "var(--color-border)",
       },
       fontFamily: {
-        sans: ["var(--font-jakarta)", "sans-serif"],
-        serif: ["var(--font-fraunces)", "serif"],
+        sans: ["var(--font-jakarta)", "Noto Sans Telugu", "Nirmala UI", "sans-serif"],
+        serif: ["var(--font-fraunces)", "Noto Serif Telugu", "Nirmala UI", "serif"],
       },
       boxShadow: {
-        card: "0 10px 35px rgba(31, 78, 61, 0.08)",
+        card: "var(--shadow-card)",
       },
     },
   },

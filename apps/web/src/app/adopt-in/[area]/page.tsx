@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { PetGrid } from "@/components/pet-grid";
 import { BreadcrumbJsonLd, JsonLd } from "@/components/json-ld";
 import { localities, getLocality } from "@/lib/localities";
+import { RecordPetSearch } from "@/components/record-pet-search";
 
 export const revalidate = 300;
 
@@ -38,7 +39,8 @@ export default function LocalityPage({ params }: { params: { area: string } }) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
   return (
-    <div className="page-shell pb-16 pt-12 sm:pt-16">
+    <div className="public-theme page-shell pb-16 pt-12 sm:pt-16">
+      <RecordPetSearch area={locality.name} />
       <BreadcrumbJsonLd items={[
         { name: "Home", path: "/" },
         { name: "Adopt", path: "/adopt" },
@@ -64,10 +66,10 @@ export default function LocalityPage({ params }: { params: { area: string } }) {
       </nav>
       <header className="mt-9 max-w-4xl">
         <p className="eyebrow">Hyderabad adoption guide</p>
-        <h1 className="mt-3 font-serif text-4xl font-semibold leading-tight text-forest sm:text-5xl">
+        <h1 className="fluid-title mt-3 font-serif font-semibold text-forest">
           Adopt a pet in {locality.name}
         </h1>
-        <p className="mt-5 text-base leading-8 text-[#4F5B53]">{locality.intro}</p>
+        <p className="mt-5 text-base leading-8 text-muted">{locality.intro}</p>
       </header>
       <section className="mt-12" aria-labelledby="local-pets-heading">
         <p className="eyebrow">{locality.name} and nearby</p>
