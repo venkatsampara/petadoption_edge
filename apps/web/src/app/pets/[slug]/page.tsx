@@ -124,6 +124,16 @@ export default async function PetDetailPage({ params }: { params: RouteParams })
               ))}
             </div>
           )}
+          {whatsappLink && (
+            <section aria-labelledby="whatsapp-heading" className="rounded-2xl bg-[#E9F0EA] p-5">
+              <h2 id="whatsapp-heading" className="font-serif text-xl text-forest">Have a question about {pet.name}?</h2>
+              <p className="mt-1 text-sm leading-6 text-muted">Chat directly with their owner or caretaker on WhatsApp.</p>
+              <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="button button-outline mt-3 w-full" aria-label={`Chat on WhatsApp about ${pet.name} (opens in a new tab)`}>
+                <MessageCircle size={18} aria-hidden="true" /> Chat on WhatsApp
+              </a>
+              <p className="mt-2 text-xs leading-5 text-muted">WhatsApp opens with a suggested message; you choose whether to send it.</p>
+            </section>
+          )}
         </div>
 
         <article className="lg:sticky lg:top-28">
@@ -157,16 +167,6 @@ export default async function PetDetailPage({ params }: { params: RouteParams })
           <div id="apply" className="mt-7 rounded-3xl bg-[#E9F0EA] p-5 sm:p-6">
             <h2 className="font-serif text-2xl text-forest">Could you be their person?</h2>
             <p className="mt-2 text-sm leading-6 text-muted">Share a little about your home and we&apos;ll help you take the next step.</p>
-            {whatsappLink && (
-              <div className="mt-5 rounded-2xl bg-white p-4">
-                <p className="text-sm font-bold text-forest">Have a question about {pet.name}?</p>
-                <p className="mt-1 text-sm leading-6 text-muted">Chat directly with their owner or caretaker on WhatsApp.</p>
-                <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="button button-outline mt-3 w-full" aria-label={`Chat on WhatsApp about ${pet.name} (opens in a new tab)`}>
-                  <MessageCircle size={18} aria-hidden="true" /> Chat on WhatsApp
-                </a>
-                <p className="mt-2 text-xs leading-5 text-muted">WhatsApp opens with a suggested message; you choose whether to send it.</p>
-              </div>
-            )}
             <a href="#apply-form" className="button mt-5 w-full">
               Apply to adopt {pet.name} <Heart size={17} aria-hidden="true" />
             </a>

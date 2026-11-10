@@ -46,12 +46,16 @@ export function ApplicationForm({ pet }: { pet: Pet }) {
   }
 
   return (
-    <form className="mt-5 grid gap-4" onSubmit={submit} noValidate>
+    <form className="mt-5 grid gap-4" onSubmit={submit} noValidate aria-labelledby="application-form-heading">
+      <div>
+        <h3 id="application-form-heading" className="font-serif text-xl text-forest">Send an adoption enquiry</h3>
+        <p className="mt-1 text-xs leading-5 text-muted">All fields are required. A few details will help the rescue team get to know you.</p>
+      </div>
       <div className="grid gap-4 sm:grid-cols-2">
-        <label className="field-label"><span>Your name</span><input className="field-control" name="applicantName" autoComplete="name" required maxLength={120} /></label>
-        <label className="field-label"><span>Email</span><input className="field-control" type="email" name="email" autoComplete="email" required maxLength={254} /></label>
-        <label className="field-label"><span>Phone</span><input className="field-control" type="tel" name="phone" autoComplete="tel" required maxLength={30} /></label>
-        <label className="field-label"><span>Your neighbourhood</span><input className="field-control" name="area" autoComplete="address-level2" required maxLength={120} /></label>
+        <label className="field-label"><span>Your name</span><input className="field-control" name="applicantName" autoComplete="name" placeholder="Full name" required maxLength={120} /></label>
+        <label className="field-label"><span>Email</span><input className="field-control" type="email" name="email" autoComplete="email" placeholder="you@example.com" required maxLength={254} /></label>
+        <label className="field-label"><span>Phone</span><input className="field-control" type="tel" name="phone" autoComplete="tel" placeholder="+91 98765 43210" required maxLength={30} /></label>
+        <label className="field-label"><span>Your neighbourhood</span><input className="field-control" name="area" autoComplete="address-level2" placeholder="Area in Hyderabad" required maxLength={120} /></label>
       </div>
       <label className="field-label">
         <span>Home type</span>
@@ -62,7 +66,7 @@ export function ApplicationForm({ pet }: { pet: Pet }) {
           <option>Other</option>
         </select>
       </label>
-      <label className="field-label"><span>A little about your home and why you would like to adopt</span><textarea className="field-control min-h-28 resize-y" name="message" required minLength={10} maxLength={5000} /></label>
+      <label className="field-label"><span>A little about your home and why you would like to adopt</span><textarea className="field-control min-h-28 resize-y" name="message" placeholder="Tell us about your home, who lives there, and what makes you excited to adopt." required minLength={10} maxLength={5000} /></label>
       {message && <p role="status" className="rounded-xl bg-white px-4 py-3 text-sm leading-6 text-forest">{message}</p>}
       <button className="button w-full" type="submit" disabled={busy}>{busy ? "Sending…" : `Send interest for ${pet.name}`}</button>
       <p className="text-xs leading-5 text-muted">Your details are shared with the rescue team for this adoption enquiry.</p>
