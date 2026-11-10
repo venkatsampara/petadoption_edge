@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
+import Script from "next/script";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import "./globals.css";
@@ -25,6 +26,9 @@ export const metadata: Metadata = {
     template: "%s | Hyderabad Paws",
   },
   description: "Meet adoptable dogs and cats from Hyderabad shelters and rescuers.",
+  verification: {
+    google: "Aa4y9vWek0-ymEWmMVEKUjc5VADHVA9JG1F6pbSn_sA",
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -38,6 +42,18 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         />
       </head>
       <body className="min-h-screen bg-canvas font-sans text-ink antialiased">
+        <Script id="google-tag-manager" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+            window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+            window.gtag('js', new Date());
+            var script = document.createElement('script');
+            script.async = true;
+            script.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-P3GJZBJG';
+            document.head.appendChild(script);
+          `}
+        </Script>
         <a href="#main-content" className="skip-link">Skip to content</a>
         <SiteHeader />
         <main id="main-content">{children}</main>

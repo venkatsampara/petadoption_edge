@@ -106,6 +106,8 @@ Set the same Cloudinary cloud name and upload preset in the API environment if y
 
 The Vercel build does not need the Render API to be awake: API-backed pages and the pet sitemap render on demand, while locality pages are generated on first request and revalidated. Server-side API requests time out after 12 seconds so a cold or unreachable API produces the page's retry/fallback state instead of stalling a build or request indefinitely.
 
+Google Tag Manager container `GTM-P3GJZBJG` loads after the site becomes interactive, including on admin pages. Configure and publish the desired tags, consent settings, and single-page navigation tracking in the container; the site does not configure a Google Analytics property or send custom events itself. Do not configure tags to collect form entries or other personal information.
+
 ## Environment checklist
 
 | Variable | API / Render | Web / Vercel | Purpose |
