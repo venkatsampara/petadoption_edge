@@ -98,13 +98,15 @@ Import the repository into Vercel and set **Root Directory** to `apps/web`. Leav
 Set these Vercel environment variables:
 
 - `NEXT_PUBLIC_API_URL` — Render API origin with `/api/v1`, for example `https://your-api.onrender.com/api/v1`
-- `NEXT_PUBLIC_SITE_URL` — Vercel production site origin
+- `NEXT_PUBLIC_SITE_URL` — `https://hyderabadpaws.in` for the Vercel Production environment (no path or trailing slash); set a separate origin for Preview if needed. Redeploy after changing it because Next.js embeds public environment variables at build time.
 - `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` — optional, for direct admin image uploads
 - `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET` — optional unsigned preset for the cloud above
 
 Set the same Cloudinary cloud name and upload preset in the API environment if you keep those optional documented keys there. The unsigned preset should allow only the image transformations and upload behavior required for pet profile photos.
 
 The Vercel build does not need the Render API to be awake: API-backed pages and the pet sitemap render on demand, while locality pages are generated on first request and revalidated. Server-side API requests time out after 12 seconds so a cold or unreachable API produces the page's retry/fallback state instead of stalling a build or request indefinitely.
+
+Canonical URLs, sitemap entries, robots metadata, and structured data use the same site origin. Vercel Production falls back to `https://hyderabadpaws.in` if `NEXT_PUBLIC_SITE_URL` is unset or points to localhost; a localhost setting also produces a build warning and should be corrected in Vercel. Local development continues to use `http://localhost:3000`.
 
 Google Tag Manager container `GTM-P3GJZBJG` loads after the site becomes interactive, including on admin pages. Configure and publish the desired tags, consent settings, and single-page navigation tracking in the container; the site does not configure a Google Analytics property or send custom events itself. Do not configure tags to collect form entries or other personal information.
 

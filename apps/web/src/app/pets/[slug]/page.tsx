@@ -3,7 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Check, Heart, MapPin, MessageCircle, ShieldCheck } from "lucide-react";
 import { getWhatsAppLink } from "@hyderabad-paws/shared";
+import { AnalyticsEventOnMount, TrackedExternalLink } from "@/components/analytics-tracking";
 import { ApiRequestError, getPet, getPets } from "@/lib/api";
+import { getSiteUrl } from "@/lib/site-url";
 import { ApplicationForm } from "@/components/application-form";
 import { BreadcrumbJsonLd, JsonLd } from "@/components/json-ld";
 import { PetCard } from "@/components/pet-card";
@@ -58,6 +60,7 @@ export default async function PetDetailPage({ params }: { params: RouteParams })
   }
 
   const gallery = pet.images.length > 0 ? pet.images : ["/pet-placeholder.svg"];
+  const siteUrl = getSiteUrl();
   const whatsappLink = pet.status === "available" ? getWhatsAppLink(pet.whatsappNumber, pet.name) : null;
   const similarPetsHref = `/adopt?species=${encodeURIComponent(pet.species)}`;
   const similarSpeciesLabel = pet.species === "other" ? "pets" : `${pet.species}s`;
@@ -86,6 +89,7 @@ export default async function PetDetailPage({ params }: { params: RouteParams })
 
   return (
     <div className="public-theme page-shell pb-24 pt-8 sm:pb-16 sm:pt-12">
+      <AnalyticsEventOnMount event="view_pet_profile" parameters={{ pet_id: pet.id, species: pet.species }} />
       <BreadcrumbJsonLd items={[
         { name: "Home", path: "/" },
         { name: "Adopt", path: "/adopt" },
@@ -93,23 +97,12 @@ export default async function PetDetailPage({ params }: { params: RouteParams })
       ]} />
       <JsonLd data={{
         "@context": "https://schema.org",
-        "@type": "Product",
-        name: pet.name,
-        image: pet.images,
+        "@type": "WebPage",
+        name: `${pet.name} — ${pet.species} in ${pet.area}, Hyderabad`,
         description: pet.description,
-        brand: { "@type": "Organization", name: "Hyderabad Paws" },
-        offers: {
-          "@type": "Offer",
-          availability: pet.status === "available"
-            ? "https://schema.org/InStock"
-            : pet.status === "pending"
-              ? "https://schema.org/LimitedAvailability"
-              : "https://schema.org/SoldOut",
-          url: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/pets/${pet.slug}`,
-          price: "0",
-          priceCurrency: "INR",
-        },
-        mainEntityOfPage: { "@type": "ItemPage", "@id": `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/pets/${pet.slug}` },
+        url: `${siteUrl}/pets/${pet.slug}`,
+        primaryImageOfPage: pet.images[0],
+        about: { "@type": "Thing", name: pet.name, description: pet.description },
       }} />
       <nav aria-label="Breadcrumb" className="text-sm text-muted">
         <ol className="flex items-center gap-2">
@@ -132,15 +125,15 @@ export default async function PetDetailPage({ params }: { params: RouteParams })
         <h1 className="fluid-display mt-3 font-serif font-semibold text-forest">{pet.name}</h1>
         <p className="mt-2 text-sm font-semibold text-muted">{pet.area}, Hyderabad</p>
         {whatsappLink ? (
-          <a
+          <TrackedExternalLink
             href={whatsappLink}
-            target="_blank"
-            rel="noopener noreferrer"
             className="button mt-4 w-full"
-            aria-label={`Chat on WhatsApp about ${pet.name} (opens in a new tab)`}
+            ariaLabel={`Chat on WhatsApp about ${pet.name} (opens in a new tab)`}
+            event="click_whatsapp"
+            parameters={{ pet_id: pet.id }}
           >
             <MessageCircle size={18} aria-hidden="true" /> Chat on WhatsApp
-          </a>
+          </TrackedExternalLink>
         ) : pet.status === "available" ? (
           <a href="#apply-form" className="button mt-4 w-full">
             Apply to adopt {pet.name} <Heart size={17} aria-hidden="true" />
@@ -176,9 +169,9 @@ export default async function PetDetailPage({ params }: { params: RouteParams })
             <section aria-labelledby="whatsapp-heading" className="mt-5 hidden rounded-2xl bg-soft p-5 lg:block">
               <h2 id="whatsapp-heading" className="font-serif text-xl text-forest">Have a question about {pet.name}?</h2>
               <p className="mt-1 text-sm leading-6 text-muted">Chat directly with their owner or caretaker on WhatsApp.</p>
-              <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="button mt-3 w-full" aria-label={`Chat on WhatsApp about ${pet.name} (opens in a new tab)`}>
+              <TrackedExternalLink href={whatsappLink} className="button mt-3 w-full" ariaLabel={`Chat on WhatsApp about ${pet.name} (opens in a new tab)`} event="click_whatsapp" parameters={{ pet_id: pet.id }}>
                 <MessageCircle size={18} aria-hidden="true" /> Chat on WhatsApp
-              </a>
+              </TrackedExternalLink>
               <p className="mt-2 text-xs leading-5 text-muted">WhatsApp opens with a suggested message; you choose whether to send it.</p>
             </section>
           )}
@@ -207,7 +200,7 @@ export default async function PetDetailPage({ params }: { params: RouteParams })
           <div className="mt-6 space-y-3 rounded-2xl bg-surface p-5">
             <p className="flex items-center gap-2 text-sm font-semibold text-forest">
               <ShieldCheck size={18} aria-hidden="true" />
-              {pet.vaccinated ? "Vaccinated" : "Vaccination details to be confirmed"}
+              {pet.vaccinated ? "Caregiver reports vaccinated" : "Vaccination details to be confirmed"}
             </p>
             <p className="flex items-center gap-2 text-sm font-semibold text-forest">
               <Check size={18} aria-hidden="true" />
@@ -259,12 +252,19 @@ export default async function PetDetailPage({ params }: { params: RouteParams })
         </article>
       </div>
 
+      <section className="mt-14 max-w-3xl" aria-labelledby="pet-guide-heading">
+        <h2 id="pet-guide-heading" className="font-serif text-2xl text-forest">Preparing to welcome a {pet.species}?</h2>
+        <p className="mt-3 leading-7 text-muted">
+          Read our practical guide to the <Link className="font-semibold text-forest underline decoration-amber decoration-2 underline-offset-4" href={`/pet-adoption-guide/${pet.species === "cat" ? "first-30-days-after-adopting-a-cat" : "first-30-days-after-adopting-a-dog"}`}>first 30 days after adoption</Link> and learn what questions to ask the caregiver.
+        </p>
+      </section>
+
       {pet.status === "available" && (
         <div className="fixed inset-x-0 bottom-0 z-20 border-t border-forest/10 bg-canvas/95 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur sm:hidden">
           {whatsappLink ? (
-            <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="button w-full" aria-label={`Chat on WhatsApp about ${pet.name} (opens in a new tab)`}>
+            <TrackedExternalLink href={whatsappLink} className="button w-full" ariaLabel={`Chat on WhatsApp about ${pet.name} (opens in a new tab)`} event="click_whatsapp" parameters={{ pet_id: pet.id }}>
               <MessageCircle size={18} aria-hidden="true" /> Chat on WhatsApp
-            </a>
+            </TrackedExternalLink>
           ) : (
             <a href="#apply-form" className="button w-full">
               Apply to adopt {pet.name} <Heart size={17} aria-hidden="true" />

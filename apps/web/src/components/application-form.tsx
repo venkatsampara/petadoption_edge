@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { applicationInputSchema } from "@hyderabad-paws/shared";
 import type { Pet } from "@/lib/types";
+import { trackEvent } from "@/lib/analytics";
 import { getFieldErrors } from "@/lib/form-errors";
 
 const applicationFields = ["applicantName", "email", "phone", "area", "housingType", "message"];
@@ -12,6 +13,7 @@ export function ApplicationForm({ pet }: { pet: Pet }) {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
   const [completedFields, setCompletedFields] = useState(0);
+  const enquiryStarted = useRef(false);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -44,6 +46,8 @@ export function ApplicationForm({ pet }: { pet: Pet }) {
       form.reset();
       setCompletedFields(0);
       setMessage({ kind: "success", text: `Thanks for applying to meet ${pet.name}. The local rescue team will review your interest.` });
+      trackEvent("submit_adoption_enquiry", { pet_id: pet.id });
+      enquiryStarted.current = false;
     } catch (error) {
       setMessage({ kind: "error", text: error instanceof Error ? error.message : "Application could not be submitted." });
     } finally {
@@ -57,6 +61,11 @@ export function ApplicationForm({ pet }: { pet: Pet }) {
       onSubmit={submit}
       noValidate
       aria-labelledby="application-form-heading"
+      onFocusCapture={() => {
+        if (enquiryStarted.current) return;
+        enquiryStarted.current = true;
+        trackEvent("start_adoption_enquiry", { pet_id: pet.id });
+      }}
       onChange={(event) => {
         const values = new FormData(event.currentTarget);
         const parsed = parseApplicationForm(values, pet.id);

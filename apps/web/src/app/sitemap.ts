@@ -1,6 +1,9 @@
 import type { MetadataRoute } from "next";
 import { headers } from "next/headers";
 import { ApiRequestError, getPets } from "@/lib/api";
+import { localities } from "@/lib/localities";
+import { guideArticles } from "@/lib/seo-content";
+import { getSiteUrl } from "@/lib/site-url";
 import type { Pet } from "@/lib/types";
 
 export const revalidate = 300;
@@ -10,18 +13,19 @@ const staticRoutes = [
   "/adopt",
   "/about",
   "/volunteer",
-  "/adopt-in/gachibowli",
-  "/adopt-in/hitech-city",
-  "/adopt-in/madhapur",
-  "/adopt-in/kondapur",
-  "/adopt-in/banjara-hills",
-  "/adopt-in/secunderabad",
+  "/dogs-for-adoption",
+  "/cats-for-adoption",
+  "/indie-dogs-for-adoption",
+  "/puppies-for-adoption",
+  "/pet-adoption-guide",
+  ...guideArticles.map((article) => `/pet-adoption-guide/${article.slug}`),
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   headers();
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const siteUrl = getSiteUrl();
   const pets: Pet[] = [];
+  let indexableLocalities: typeof localities = [];
   try {
     let page = 1;
     let totalPages = 1;
@@ -35,6 +39,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       totalPages = listing.pagination.totalPages;
       page += 1;
     } while (page <= totalPages);
+    const localityResults = await Promise.all(localities.map(async (locality) => {
+      try {
+        const listing = await getPets(new URLSearchParams({
+          area: locality.name,
+          status: "available",
+          page: "1",
+          limit: "1",
+        }));
+        return listing.pagination.total > 0 ? locality : null;
+      } catch (error) {
+        if (error instanceof ApiRequestError) return null;
+        throw error;
+      }
+    }));
+    indexableLocalities = localityResults.filter((locality): locality is (typeof localities)[number] => locality !== null);
   } catch (error) {
     // Fall back to static routes if the API is unreachable.
     if (!(error instanceof ApiRequestError)) throw error;
@@ -48,6 +67,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
   return [
     ...staticEntries,
+    ...indexableLocalities.map((locality) => ({
+      url: new URL(`/adopt-in/${locality.slug}`, siteUrl).toString(),
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.75,
+    })),
     ...pets.map((pet) => ({
       url: new URL(`/pets/${pet.slug}`, siteUrl).toString(),
       lastModified: new Date(pet.updatedAt),

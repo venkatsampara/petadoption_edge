@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { volunteerInputSchema } from "@hyderabad-paws/shared";
 import { getFieldErrors } from "@/lib/form-errors";
+import { trackEvent } from "@/lib/analytics";
 
 export function VolunteerForm() {
   const [message, setMessage] = useState<{ kind: "success" | "error"; text: string } | null>(null);
@@ -48,6 +49,7 @@ export function VolunteerForm() {
       if (!response.ok) throw new Error(body.error?.message ?? "Your interest could not be submitted.");
       form.reset();
       setMessage({ kind: "success", text: "Thank you for offering your time. We’ve received your volunteer interest." });
+      trackEvent("register_volunteer");
     } catch (error) {
       setMessage({ kind: "error", text: error instanceof Error ? error.message : "Your interest could not be submitted." });
     } finally {

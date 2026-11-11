@@ -7,6 +7,7 @@ import { PetCard } from "@/components/pet-card";
 import { Reveal } from "@/components/reveal";
 import { JsonLd } from "@/components/json-ld";
 import { ApiRequestError, getFeaturedPets } from "@/lib/api";
+import { getSiteUrl } from "@/lib/site-url";
 import type { Pet } from "@/lib/types";
 
 export const revalidate = 300;
@@ -43,6 +44,7 @@ const steps = [
 
 export default async function HomePage() {
   headers();
+  const siteUrl = getSiteUrl();
   let pets: Pet[] = [];
   let petsUnavailable = false;
   try {
@@ -59,17 +61,18 @@ export default async function HomePage() {
         "@graph": [
           {
             "@type": "Organization",
-            "@id": `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/#organization`,
+            "@id": `${siteUrl}/#organization`,
             name: "Hyderabad Paws",
-            url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+            url: siteUrl,
             description: "Connecting Hyderabad adopters with local shelters and independent pet rescuers.",
           },
           {
-            "@type": "LocalBusiness",
+            "@type": "WebSite",
+            "@id": `${siteUrl}/#website`,
             name: "Hyderabad Paws",
-            url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
-            address: { "@type": "PostalAddress", addressLocality: "Hyderabad", addressRegion: "Telangana", addressCountry: "IN" },
-            areaServed: { "@type": "City", name: "Hyderabad" },
+            url: siteUrl,
+            inLanguage: "en-IN",
+            publisher: { "@id": `${siteUrl}/#organization` },
           },
         ],
       }} />
@@ -196,6 +199,24 @@ export default async function HomePage() {
           </div>
         </section>
       </Reveal>
+
+      <section className="page-shell pb-20" aria-labelledby="adoption-guides-heading">
+        <p className="eyebrow">Find the right next step</p>
+        <h2 id="adoption-guides-heading" className="section-title mt-3">Explore adoption and care guides</h2>
+        <div className="mt-6 flex flex-wrap gap-3">
+          {[
+            ["Dogs for adoption in Hyderabad", "/dogs-for-adoption"],
+            ["Cats for adoption in Hyderabad", "/cats-for-adoption"],
+            ["Indie dog adoption", "/indie-dogs-for-adoption"],
+            ["Puppies for adoption", "/puppies-for-adoption"],
+            ["Pet adoption guide", "/pet-adoption-guide"],
+          ].map(([label, href]) => (
+            <Link key={href} href={href} className="inline-flex min-h-11 items-center rounded-full border border-forest/20 bg-surface px-5 py-2.5 text-sm font-bold text-forest hover:border-forest focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber">
+              {label}
+            </Link>
+          ))}
+        </div>
+      </section>
 
       <section className="page-shell pb-20">
         <div className="flex flex-col items-start justify-between gap-6 rounded-[32px] bg-forest-strong px-7 py-9 text-white sm:flex-row sm:items-center sm:px-12 sm:py-12">

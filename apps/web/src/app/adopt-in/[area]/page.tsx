@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PetGrid } from "@/components/pet-grid";
-import { BreadcrumbJsonLd, JsonLd } from "@/components/json-ld";
+import { BreadcrumbJsonLd } from "@/components/json-ld";
+import { ApiRequestError, getPets } from "@/lib/api";
 import { getLocality } from "@/lib/localities";
 import { RecordPetSearch } from "@/components/record-pet-search";
 
@@ -15,11 +16,23 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const locality = getLocality(params.area);
   if (!locality) return {};
+  let hasCurrentListings = false;
+  try {
+    const listing = await getPets(new URLSearchParams({
+      area: locality.name,
+      status: "available",
+      limit: "1",
+    }));
+    hasCurrentListings = listing.pagination.total > 0;
+  } catch (error) {
+    if (!(error instanceof ApiRequestError)) throw error;
+  }
   return {
     title: locality.title,
     description: locality.description,
     alternates: { canonical: `/adopt-in/${locality.slug}` },
     openGraph: { title: locality.title, description: locality.description },
+    ...(!hasCurrentListings ? { robots: { index: false, follow: true } } : {}),
   };
 }
 
@@ -32,8 +45,6 @@ export default function LocalityPage({ params }: { params: { area: string } }) {
     status: "available",
     limit: "12",
   });
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-
   return (
     <div className="public-theme page-shell pb-16 pt-12 sm:pt-16">
       <RecordPetSearch area={locality.name} />
@@ -42,15 +53,6 @@ export default function LocalityPage({ params }: { params: { area: string } }) {
         { name: "Adopt", path: "/adopt" },
         { name: `Adopt in ${locality.name}`, path: `/adopt-in/${locality.slug}` },
       ]} />
-      <JsonLd data={{
-        "@context": "https://schema.org",
-        "@type": "LocalBusiness",
-        name: "Hyderabad Paws",
-        url: `${siteUrl}/adopt-in/${locality.slug}`,
-        description: locality.description,
-        address: { "@type": "PostalAddress", addressLocality: "Hyderabad", addressRegion: "Telangana", addressCountry: "IN" },
-        areaServed: { "@type": "Place", name: `${locality.name}, Hyderabad` },
-      }} />
       <nav aria-label="Breadcrumb" className="text-sm text-muted">
         <ol className="flex items-center gap-2">
           <li><Link className="hover:text-forest" href="/">Home</Link></li>

@@ -8,7 +8,7 @@ import { RecordPetSearch } from "@/components/record-pet-search";
 
 export const revalidate = 300;
 
-export const metadata: Metadata = {
+const baseMetadata: Metadata = {
   title: "Adopt a Dog or Cat in Hyderabad",
   description:
     "Browse dogs and cats available for adoption in Hyderabad. Filter by species, neighbourhood, and size to find your match.",
@@ -16,6 +16,20 @@ export const metadata: Metadata = {
 };
 
 type SearchParams = Record<string, string | string[] | undefined>;
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}): Promise<Metadata> {
+  const hasFilters = Object.values(searchParams).some(
+    (value) => typeof value === "string" && value.trim().length > 0,
+  );
+  return {
+    ...baseMetadata,
+    ...(hasFilters ? { robots: { index: false, follow: true } } : {}),
+  };
+}
 
 const areas = [
   "Gachibowli",

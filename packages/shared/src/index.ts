@@ -82,10 +82,19 @@ export const petListQuerySchema = z.object({
   species: petSpeciesSchema.optional(),
   area: z.string().trim().min(1).max(120).optional(),
   size: petSizeSchema.optional(),
+  breed: z.string().trim().min(1).max(120)
+    .refine((value) => value.split(",").length <= 5 && value.split(",").every((breed) => breed.trim().length > 0), "Enter one or more exact breed labels")
+    .optional(),
+  gender: petGenderSchema.optional(),
+  minAgeMonths: z.coerce.number().int().nonnegative().max(600).optional(),
+  maxAgeMonths: z.coerce.number().int().nonnegative().max(600).optional(),
   status: petStatusSchema.default("available"),
   page: z.coerce.number().int().positive().default(1),
   limit: z.coerce.number().int().positive().max(50).default(12),
-});
+}).refine(
+  (query) => query.minAgeMonths === undefined || query.maxAgeMonths === undefined || query.minAgeMonths <= query.maxAgeMonths,
+  { message: "Minimum age cannot exceed maximum age", path: ["minAgeMonths"] },
+);
 
 export const petSearchSchema = z.object({
   species: petSpeciesSchema.optional(),

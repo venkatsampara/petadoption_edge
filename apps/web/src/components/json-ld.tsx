@@ -6,7 +6,7 @@ export function JsonLd({ data }: JsonLdProps) {
 }
 
 export function BreadcrumbJsonLd({ items }: { items: { name: string; path: string }[] }) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const baseUrl = getSiteUrl();
   return (
     <JsonLd data={{
       "@context": "https://schema.org",
@@ -20,3 +20,4 @@ export function BreadcrumbJsonLd({ items }: { items: { name: string; path: strin
     }} />
   );
 }
+import { getSiteUrl } from "@/lib/site-url";

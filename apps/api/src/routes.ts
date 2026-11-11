@@ -9,7 +9,7 @@ import {
   volunteerInputSchema,
 } from "@hyderabad-paws/shared";
 import bcrypt from "bcryptjs";
-import { and, desc, eq, inArray, ne, sql } from "drizzle-orm";
+import { and, desc, eq, gte, inArray, lte, ne, sql } from "drizzle-orm";
 import { Router } from "express";
 import { rateLimit } from "express-rate-limit";
 import { applications, adminUsers, pets } from "./db/schema";
@@ -67,11 +67,18 @@ apiRouter.get(
       return;
     }
 
-    const { species, area, size, status, page, limit } = parsed.data;
+    const { species, area, size, breed, gender, minAgeMonths, maxAgeMonths, status, page, limit } = parsed.data;
     const filters = [eq(pets.status, status)];
     if (species) filters.push(eq(pets.species, species));
     if (area) filters.push(eq(pets.area, area));
     if (size) filters.push(eq(pets.size, size));
+    if (breed) {
+      const breeds = breed.split(",").map((value) => value.trim()).filter(Boolean);
+      filters.push(breeds.length === 1 ? eq(pets.breed, breeds[0]) : inArray(pets.breed, breeds));
+    }
+    if (gender) filters.push(eq(pets.gender, gender));
+    if (minAgeMonths !== undefined) filters.push(gte(pets.ageMonths, minAgeMonths));
+    if (maxAgeMonths !== undefined) filters.push(lte(pets.ageMonths, maxAgeMonths));
 
     const where = and(...filters);
     const [items, count] = await Promise.all([

@@ -24,6 +24,15 @@ export function SiteHeader() {
             <li className="hidden sm:list-item">
               <Link className="nav-link" href="/about">Our story</Link>
             </li>
+            <li className="hidden lg:list-item">
+              <Link className="nav-link" href="/dogs-for-adoption">Dogs</Link>
+            </li>
+            <li className="hidden lg:list-item">
+              <Link className="nav-link" href="/cats-for-adoption">Cats</Link>
+            </li>
+            <li className="hidden md:list-item">
+              <Link className="nav-link" href="/pet-adoption-guide">Guides</Link>
+            </li>
             <li>
               <ThemeToggle />
             </li>
