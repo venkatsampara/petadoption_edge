@@ -6,7 +6,7 @@ import { guideArticles } from "@/lib/seo-content";
 import { getSiteUrl } from "@/lib/site-url";
 import type { Pet } from "@/lib/types";
 
-export const revalidate = 300;
+export const revalidate = 0;
 
 const staticRoutes = [
   "",

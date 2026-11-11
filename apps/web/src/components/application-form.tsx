@@ -112,7 +112,7 @@ export function ApplicationForm({ pet }: { pet: Pet }) {
       <label className="field-label"><span>A little about your home and why you would like to adopt</span><textarea className="field-control min-h-28 resize-y" name="message" placeholder="Tell us about your home, who lives there, and what makes you excited to adopt." required minLength={10} maxLength={5000} aria-invalid={Boolean(fieldErrors.message)} aria-describedby={fieldErrors.message ? "application-message-error" : undefined} />{fieldErrors.message && <span id="application-message-error" className="field-error">{fieldErrors.message}</span>}</label>
       {message && <p role={message.kind === "error" ? "alert" : "status"} className={`rounded-xl px-4 py-3 text-sm leading-6 ${message.kind === "error" ? "status-error" : "bg-soft text-forest"}`}>{message.text}</p>}
       <button className="button w-full" type="submit" disabled={busy}>{busy ? "Sending…" : `Send interest for ${pet.name}`}</button>
-      <p className="text-xs leading-5 text-muted">Your details are shared with the rescue team for this adoption enquiry.</p>
+      <p className="text-xs leading-5 text-muted">Your details are shared with the Hyderabad Paws team and, if the pet has a linked caretaker account, that caretaker for this adoption enquiry.</p>
     </form>
   );
 }

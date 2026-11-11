@@ -29,7 +29,7 @@ async function apiGet<T>(path: string, revalidate = 300): Promise<T> {
   let response: Response;
   try {
     response = await fetch(`${getApiUrl()}${path}`, {
-      next: { revalidate },
+      ...(revalidate === 0 ? { cache: "no-store" as const } : { next: { revalidate } }),
       headers: { Accept: "application/json" },
       signal: AbortSignal.timeout(API_REQUEST_TIMEOUT_MS),
     });
@@ -58,11 +58,11 @@ async function apiGet<T>(path: string, revalidate = 300): Promise<T> {
 
 export function getPets(filters: URLSearchParams = new URLSearchParams()): Promise<PetListResponse> {
   const query = filters.toString();
-  return apiGet<PetListResponse>(`/pets${query ? `?${query}` : ""}`);
+  return apiGet<PetListResponse>(`/pets${query ? `?${query}` : ""}`, 0);
 }
 
 export function getFeaturedPets(): Promise<Pet[]> {
-  return apiGet<PetListResponse>("/pets?status=available&limit=6&page=1").then(
+  return apiGet<PetListResponse>("/pets?status=available&limit=6&page=1", 0).then(
     (result) => result.items,
   );
 }

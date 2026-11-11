@@ -17,6 +17,7 @@ export function SiteFooter() {
         <nav aria-label="Footer navigation" className="sm:justify-self-end">
           <ul className="flex flex-wrap gap-x-6 gap-y-3 text-sm text-white/85">
             <li><Link className="footer-link" href="/adopt">Adopt</Link></li>
+            <li><Link className="footer-link" href="/post-a-pet">Post a pet</Link></li>
             <li><Link className="footer-link" href="/dogs-for-adoption">Dogs</Link></li>
             <li><Link className="footer-link" href="/cats-for-adoption">Cats</Link></li>
             <li><Link className="footer-link" href="/pet-adoption-guide">Pet adoption guide</Link></li>

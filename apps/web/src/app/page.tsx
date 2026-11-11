@@ -10,7 +10,7 @@ import { ApiRequestError, getFeaturedPets } from "@/lib/api";
 import { getSiteUrl } from "@/lib/site-url";
 import type { Pet } from "@/lib/types";
 
-export const revalidate = 300;
+export const revalidate = 0;
 
 export const metadata: Metadata = {
   title: "Pet Adoption in Hyderabad — Find Your New Best Friend",

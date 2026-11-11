@@ -5,13 +5,13 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
 import { petInputSchema } from "@hyderabad-paws/shared";
 import { adminApi, AdminApiError } from "@/lib/admin-api";
-import type { Pet } from "@/lib/types";
+import type { ManagedPet } from "@/lib/types";
 
 type Props = { petId?: string };
 
 export function AdminPetForm({ petId }: Props) {
   const router = useRouter();
-  const [pet, setPet] = useState<Pet | null>(null);
+  const [pet, setPet] = useState<ManagedPet | null>(null);
   const [loading, setLoading] = useState(Boolean(petId));
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -20,7 +20,7 @@ export function AdminPetForm({ petId }: Props) {
   useEffect(() => {
     if (!petId) return;
     let active = true;
-    adminApi<Pet[]>("/admin/pets")
+    adminApi<ManagedPet[]>("/admin/pets")
       .then((items) => {
         const selected = items.find((item) => item.id === petId);
         if (!active) return;
@@ -108,7 +108,7 @@ export function AdminPetForm({ petId }: Props) {
 
     setBusy(true);
     try {
-      await adminApi<Pet>(petId ? `/admin/pets/${petId}` : "/admin/pets", {
+      await adminApi<ManagedPet>(petId ? `/admin/pets/${petId}` : "/admin/pets", {
         method: petId ? "PATCH" : "POST",
         body: JSON.stringify(parsed.data),
       });
@@ -139,7 +139,7 @@ export function AdminPetForm({ petId }: Props) {
             <label className="field-label"><span>Gender</span><select className="field-control" name="gender" defaultValue={pet?.gender ?? ""}><option value="">Not listed</option><option value="male">Male</option><option value="female">Female</option></select></label>
             <label className="field-label"><span>Size</span><select className="field-control" name="size" defaultValue={pet?.size ?? ""}><option value="">Not listed</option><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option></select></label>
             <label className="field-label"><span>Area</span><input className="field-control" name="area" required maxLength={120} defaultValue={pet?.area ?? ""} /></label>
-            <label className="field-label"><span>Status</span><select className="field-control" name="status" defaultValue={pet?.status ?? "available"}><option value="available">Available</option><option value="pending">Pending</option><option value="adopted">Adopted</option></select></label>
+            <label className="field-label"><span>Status</span><select className="field-control" name="status" defaultValue={pet?.status ?? "available"}><option value="available">Available</option><option value="pending">Pending</option><option value="adopted">Adopted</option>{pet?.status === "hidden" && <option value="hidden">Hidden</option>}</select><span className="text-xs font-normal text-muted">Caretaker-managed hidden or adopted pets require an approved republication request before becoming available again.</span></label>
           </div>
           <label className="field-label"><span>Description</span><textarea className="field-control min-h-32 resize-y" name="description" required maxLength={10000} defaultValue={pet?.description ?? ""} /></label>
           <label className="field-label"><span>Owner or caretaker WhatsApp number (optional)</span><input className="field-control" name="whatsappNumber" type="tel" autoComplete="tel" maxLength={30} placeholder="+91 98765 43210" defaultValue={pet?.whatsappNumber ?? ""} /><span className="text-xs font-normal text-muted">Indian mobile numbers only. This number will be public on the pet profile; leave blank to hide the WhatsApp button.</span></label>

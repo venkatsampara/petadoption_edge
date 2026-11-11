@@ -7,7 +7,7 @@ import { ApiRequestError, getPets } from "@/lib/api";
 import { getLocality } from "@/lib/localities";
 import { RecordPetSearch } from "@/components/record-pet-search";
 
-export const revalidate = 300;
+export const revalidate = 0;
 
 export async function generateMetadata({
   params,

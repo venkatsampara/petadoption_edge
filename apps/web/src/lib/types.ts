@@ -18,6 +18,8 @@ export type Pet = {
   updatedAt: string;
 };
 
+export type ManagedPet = Omit<Pet, "status"> & { status: Pet["status"] | "hidden" };
+
 export type PetListResponse = {
   items: Pet[];
   pagination: {

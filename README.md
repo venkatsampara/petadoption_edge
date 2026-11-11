@@ -41,7 +41,7 @@ packages/
    NEXT_PUBLIC_SITE_URL=http://localhost:3000
    ```
 
-   Cloudinary values can remain empty; pet photos can be supplied as public image URLs. To enable the admin uploader, set both Cloudinary values and the matching `NEXT_PUBLIC_CLOUDINARY_*` variables in the web environment.
+   Cloudinary values can remain empty; admins can supply public image URLs. Public submissions and caretaker edits accept only image URLs from the configured Cloudinary cloud; without the API's cloud name they must omit photos. To enable the admin uploader, set both Cloudinary values and the matching `NEXT_PUBLIC_CLOUDINARY_*` variables in the web environment.
 
 4. Create/update the database schema and seed the initial pets and administrator:
 
@@ -104,7 +104,7 @@ Set these Vercel environment variables:
 
 Set the same Cloudinary cloud name and upload preset in the API environment if you keep those optional documented keys there. The unsigned preset should allow only the image transformations and upload behavior required for pet profile photos.
 
-The Vercel build does not need the Render API to be awake: API-backed pages and the pet sitemap render on demand, while locality pages are generated on first request and revalidated. Server-side API requests time out after 12 seconds so a cold or unreachable API produces the page's retry/fallback state instead of stalling a build or request indefinitely.
+The Vercel build does not need the Render API to be awake: API-backed pages and the pet sitemap render on demand without caching pet data. Server-side API requests time out after 12 seconds so a cold or unreachable API produces the page's retry/fallback state instead of stalling a build or request indefinitely.
 
 Canonical URLs, sitemap entries, robots metadata, and structured data use the same site origin. Vercel Production falls back to `https://hyderabadpaws.in` if `NEXT_PUBLIC_SITE_URL` is unset or points to localhost; a localhost setting also produces a build warning and should be corrected in Vercel. Local development continues to use `http://localhost:3000`.
 
@@ -139,6 +139,12 @@ Google Tag Manager container `GTM-P3GJZBJG` loads after the site becomes interac
 
 ## Scope notes
 
+- Pet submissions use `/post-a-pet` without requiring an account. Submission details are private to administrators until reviewed and approved. Optional photo URLs must belong to the API's configured Cloudinary cloud; public file uploads are not supported. Such externally hosted images may already be public. WhatsApp numbers are public only when explicitly supplied with consent.
+- Save the submission reference, create a caretaker account at `/caretaker/register`, and request an account link at `/caretaker`. An administrator must verify identity outside the app and use the submission's link form; matching email addresses or resolving a claim alone does not grant access. To recover access without an automated reset, create a new account and request reassignment using the reference. The administrator must arrange clarification and verification outside the app.
+- Caretakers can view linked pets, review outcomes, and private adoption enquiries at `/caretaker`. Enquiries remain in the admin inbox and become visible to the linked caretaker. Profile changes require review; the published profile remains unchanged until approval. A caretaker can hide a listing or mark it adopted immediately. Republishing requires a caretaker request, admin review, and the admin's separate republish action. Check both dashboards for updates: there are no email notifications.
+- Admin and caretaker sessions use secure cookies in production. If the web and API are on different sites, browsers that block third-party cookies can prevent sign-in; use a same-site API deployment or reverse proxy and test the deployed setup.
+- Administrators can delete submission metadata and its claims from moderation; this does not delete a published pet or externally hosted Cloudinary assets. Establish retention, deletion and identity-verification procedures before deployment. API request limits are process-local, not shared across instances. Pet listings and generated Open Graph responses are requested without caching, but external search engines and social platforms may retain previously seen content.
+- `corepack pnpm db:push` must be run for an existing database before deploying the updated API, to add the submission, caretaker-account and review tables. Back up the database before applying schema changes and follow your deployment's migration policy.
 - Pet recommendations use up to five recent species, size, and neighbourhood searches saved in the visitor's browser. The most recently selected neighbourhood is used as the location; the app does not request device location. Visitors can clear saved searches from the recommendations box. Available pets matching the searched species are selected by neighbourhood and size relevance, then ordered by their number of adoption enquiries; without a species search, the current pet's species is used. Fewer than five may appear when matching pets are limited. The API receives the preference filters to find matches, but does not store the search history.
 - Admins can add an optional Indian WhatsApp mobile number to each pet profile after obtaining the owner or caretaker's permission. The number is public through the pet API and the chat link. Removing it hides the link; available pets with a valid number show a WhatsApp button with a suggested, unsent message. WhatsApp must be installed or available on the user's device.
 - After updating an existing installation, run `corepack pnpm db:push` before starting the updated API to add the nullable `whatsapp_number` column. Existing profiles have no number until an admin adds one.

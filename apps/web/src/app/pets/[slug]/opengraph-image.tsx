@@ -5,6 +5,7 @@ export const alt = "Adoptable Hyderabad Paws pet";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 export const runtime = "edge";
+export const dynamic = "force-dynamic";
 
 export default async function OpenGraphImage({ params }: { params: { slug: string } }) {
   let name = "A new best friend is waiting";
@@ -19,7 +20,7 @@ export default async function OpenGraphImage({ params }: { params: { slug: strin
     if (!(error instanceof ApiRequestError) || error.status !== 404) throw error;
   }
 
-  return new ImageResponse(
+  const response = new ImageResponse(
     <div style={{
       width: "100%",
       height: "100%",
@@ -43,4 +44,6 @@ export default async function OpenGraphImage({ params }: { params: { slug: strin
     </div>,
     size,
   );
+  response.headers.set("Cache-Control", "no-store");
+  return response;
 }

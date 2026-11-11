@@ -5,7 +5,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-30 border-b border-forest/10 bg-canvas/95 backdrop-blur">
-      <div className="page-shell flex h-[76px] items-center justify-between">
+      <div className="page-shell flex min-h-[76px] flex-wrap items-center justify-between gap-y-1 py-2 sm:flex-nowrap sm:py-0">
         <Link
           href="/"
           className="flex items-center gap-2 rounded-full text-forest focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-amber"
@@ -16,8 +16,11 @@ export function SiteHeader() {
           </span>
           <span className="text-base font-extrabold tracking-tight sm:text-lg">Hyderabad Paws</span>
         </Link>
-        <nav aria-label="Main navigation">
-          <ul className="flex items-center gap-2 sm:gap-8">
+        <nav aria-label="Main navigation" className="w-full sm:w-auto">
+          <ul className="flex items-center justify-between gap-2 sm:justify-end sm:gap-4 lg:gap-6">
+            <li>
+              <Link className="nav-link whitespace-nowrap" href="/post-a-pet">Post a pet</Link>
+            </li>
             <li className="hidden sm:list-item">
               <Link className="nav-link" href="/adopt">Find a pet</Link>
             </li>

@@ -6,7 +6,7 @@ import { PetGridSkeleton } from "@/components/pet-grid-skeleton";
 import { BreadcrumbJsonLd } from "@/components/json-ld";
 import { RecordPetSearch } from "@/components/record-pet-search";
 
-export const revalidate = 300;
+export const revalidate = 0;
 
 const baseMetadata: Metadata = {
   title: "Adopt a Dog or Cat in Hyderabad",

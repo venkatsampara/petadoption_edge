@@ -4,14 +4,15 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { adminApi, AdminApiError, type AdminApplication } from "@/lib/admin-api";
-import type { Pet } from "@/lib/types";
+import type { ManagedPet } from "@/lib/types";
+import { AdminPostModeration } from "@/components/admin-post-moderation";
 
 type AdminUser = { id: string; email: string };
 
 export function AdminDashboard() {
   const router = useRouter();
   const [user, setUser] = useState<AdminUser | null>(null);
-  const [pets, setPets] = useState<Pet[]>([]);
+  const [pets, setPets] = useState<ManagedPet[]>([]);
   const [applications, setApplications] = useState<AdminApplication[]>([]);
   const [error, setError] = useState("");
   const [busyId, setBusyId] = useState("");
@@ -22,7 +23,7 @@ export function AdminDashboard() {
       try {
         const [me, allPets, allApplications] = await Promise.all([
           adminApi<AdminUser>("/auth/me"),
-          adminApi<Pet[]>("/admin/pets"),
+          adminApi<ManagedPet[]>("/admin/pets"),
           adminApi<AdminApplication[]>("/admin/applications"),
         ]);
         if (!active) return;
@@ -52,11 +53,11 @@ export function AdminDashboard() {
     }
   }
 
-  async function togglePetStatus(pet: Pet) {
+  async function togglePetStatus(pet: ManagedPet) {
     setBusyId(pet.id);
     setError("");
     try {
-      const updated = await adminApi<Pet>(`/admin/pets/${pet.id}`, {
+      const updated = await adminApi<ManagedPet>(`/admin/pets/${pet.id}`, {
         method: "PATCH",
         body: JSON.stringify({ status: pet.status === "available" ? "pending" : "available" }),
       });
@@ -68,7 +69,7 @@ export function AdminDashboard() {
     }
   }
 
-  async function removePet(pet: Pet) {
+  async function removePet(pet: ManagedPet) {
     if (!window.confirm(`Permanently delete ${pet.name} and its applications?`)) return;
     setBusyId(pet.id);
     setError("");
@@ -128,7 +129,7 @@ export function AdminDashboard() {
                   <td className="px-5 py-4"><span className="font-bold">{pet.name}</span><span className="block text-xs capitalize text-muted">{pet.species} · {pet.breed ?? "Mixed breed"}</span></td>
                   <td className="px-5 py-4">{pet.area}</td>
                   <td className="px-5 py-4"><span className="rounded-full bg-[#E9F0EA] px-3 py-1 text-xs font-bold capitalize text-forest">{pet.status}</span></td>
-                  <td className="px-5 py-4"><div className="flex gap-3"><Link className="font-bold text-forest underline" href={`/admin/pets/${pet.id}`}>Edit</Link><button className="font-bold text-forest underline disabled:opacity-50" onClick={() => void togglePetStatus(pet)} disabled={busyId === pet.id}>{pet.status === "available" ? "Mark pending" : "Mark available"}</button><button className="font-bold text-red-700 underline disabled:opacity-50" onClick={() => void removePet(pet)} disabled={busyId === pet.id}>Delete</button></div></td>
+                  <td className="px-5 py-4"><div className="flex gap-3"><Link className="font-bold text-forest underline" href={`/admin/pets/${pet.id}`}>Edit</Link>{pet.status !== "hidden" && <button className="font-bold text-forest underline disabled:opacity-50" onClick={() => void togglePetStatus(pet)} disabled={busyId === pet.id}>{pet.status === "available" ? "Mark pending" : "Mark available"}</button>}<button className="font-bold text-red-700 underline disabled:opacity-50" onClick={() => void removePet(pet)} disabled={busyId === pet.id}>Delete</button></div></td>
                 </tr>
               ))}
               {pets.length === 0 && <tr><td className="px-5 py-8 text-center text-muted" colSpan={4}>No pet profiles yet.</td></tr>}
@@ -164,6 +165,7 @@ export function AdminDashboard() {
           {applications.length === 0 && <p className="rounded-2xl bg-surface px-5 py-8 text-center text-muted lg:col-span-2">No adoption applications received yet.</p>}
         </div>
       </section>
+      {user && <AdminPostModeration />}
     </div>
   );
 }
