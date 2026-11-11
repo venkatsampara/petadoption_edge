@@ -110,6 +110,8 @@ Canonical URLs, sitemap entries, robots metadata, and structured data use the sa
 
 Google Tag Manager container `GTM-P3GJZBJG` loads after the site becomes interactive, including on admin pages. Configure and publish the desired tags, consent settings, and single-page navigation tracking in the container; the site does not configure a Google Analytics property or send custom events itself. Do not configure tags to collect form entries or other personal information.
 
+The Google AdSense script for publisher `ca-pub-9725466829748520` loads after the site becomes interactive, including on admin and caretaker pages. Ad serving requires the site's approval and configuration in AdSense; this integration does not create ad units or implement a consent management platform. Configure applicable privacy and consent requirements and prevent ads from appearing on private pages in AdSense.
+
 ## Environment checklist
 
 | Variable | API / Render | Web / Vercel | Purpose |

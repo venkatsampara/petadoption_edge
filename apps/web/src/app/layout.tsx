@@ -43,6 +43,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         />
       </head>
       <body className="min-h-screen bg-canvas font-sans text-ink antialiased">
+        <Script
+          id="google-adsense"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9725466829748520"
+          strategy="afterInteractive"
+          async
+          crossOrigin="anonymous"
+        />
         <Script id="google-tag-manager" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
