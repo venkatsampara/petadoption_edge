@@ -36,6 +36,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" className={`${jakarta.variable} ${fraunces.variable}`} suppressHydrationWarning>
       <head>
+        <meta name="google-adsense-account" content="ca-pub-9725466829748520" />
         <script
           dangerouslySetInnerHTML={{
             __html: `try{var theme=localStorage.getItem("hyderabad-paws-theme");if(theme!=="light"&&theme!=="dark"){theme=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.dataset.theme=theme;document.documentElement.style.colorScheme=theme}catch(e){var fallback=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=fallback;document.documentElement.style.colorScheme=fallback}`,
